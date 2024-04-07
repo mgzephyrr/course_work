@@ -29,8 +29,9 @@ export const SignInForm = () => {
     const onSubmit = (values: z.infer<typeof SignInSchema>) => {
         setError("");
         setSuccess("");
+        console.log(values)
 
-        axios.post("/your/api/route", values)
+        axios.post("/auth/login", values)
         .then((data) => {
             setError(/*data.error*/"");   // ДОПИСАТЬ
             setSuccess(/*data.error*/""); // ДОПИСАТЬ
