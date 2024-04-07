@@ -13,6 +13,7 @@ import { Button } from "../ui/button"
 import { FormError } from "../form-error"
 import { FormSuccess } from "../form-success"
 import { useState } from "react"
+import { session_url } from "@/constants"
 
 export const SignUpForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -22,23 +23,26 @@ export const SignUpForm = () => {
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
             email: "",
-            password: "",
-            name: "",
-            surname: "",
+            hashed_password: "",
+            first_name: "",
+            last_name: "",
             paternity: "",
         },
     })
 
-    const onSubmit = (values: z.infer<typeof SignUpSchema>) => {
+    const onSubmit = async (values: z.infer<typeof SignUpSchema>) => {
         setError("");
         setSuccess("");
 
-        axios.post("/your/api/route", values)
+        axios.post(session_url + "/auth/signup", JSON.stringify(values))
         .then((data) => {
             setError(/*data.error*/"");   // ДОПИСАТЬ
             setSuccess(/*data.error*/""); // ДОПИСАТЬ
         })
-        .catch()
+        .catch(() => {
+            console.log('Error on Authentication')
+            console.log(values)
+        })
     }
 
     return (
@@ -72,7 +76,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="first_name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Имя</FormLabel>
@@ -88,7 +92,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="surname"
+                            name="last_name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Фамилия</FormLabel>
@@ -120,7 +124,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="hashed_password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Пароль</FormLabel>
