@@ -1,3 +1,7 @@
+"use client";
+
+import { Button } from '@/components/ui/button';
+import axios from 'axios';
 import React from 'react'
 
 const Home = () => {
@@ -5,6 +9,14 @@ const Home = () => {
 
   const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); // должна быть дата и время мероприятия
   const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(now); // должна быть дата и время мероприятия
+
+  const onClick = () => {
+    axios.get("http://localhost:8000/events")
+    .then((data) => {
+      console.log(data.data)
+    })
+    .catch()
+  }
 
   return (
       <section className='flex size-full flex-col gap-5 text-white
@@ -22,6 +34,9 @@ const Home = () => {
             </div>
           </div>
         </div>
+        <Button onClick={onClick}>
+          Click me!
+        </Button>
       </section>
   )
 }
