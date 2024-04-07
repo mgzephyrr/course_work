@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from SystemRole.schemas import SSystemRole, SSystemRoleCreate
-import crud
+from back.SystemRole.schemas import SSystemRole, SSystemRoleCreate
+from back import crud
 
 
 router = APIRouter(
@@ -16,5 +16,5 @@ async def create_role(role: SSystemRoleCreate) -> SSystemRole:
     return await crud.create_system_role(role=role)
 
 @router.get("/roles/{role_id}")
-async def get_role(role_id: int) -> SSystemRole: 
+async def get_role(role_id: int) -> SSystemRole:
     return await crud.get_system_role(system_role_id=role_id)

@@ -10,12 +10,12 @@ from os.path import abspath, dirname
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from database import Base
-from SystemRole.models import SystemRole
-from SystemReview.models import SystemReview
-from User.models import User
-from Event.models import Event
-from config import settings
+from back.database import Base
+from back.SystemRole.models import SystemRole
+from back.SystemReview.models import SystemReview
+from back.User.models import User
+from back.Event.models import Event
+from back.config import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

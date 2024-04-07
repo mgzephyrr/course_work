@@ -1,15 +1,15 @@
 from sqlalchemy import insert, select
-from database import async_session_maker
+from back.database import async_session_maker
 import passlib.hash
 
-from SystemReview.models import SystemReview
-from SystemReview.schemas import SSystemReview, SSystemReviewBase, SSystemReviewCreate
-from User.models import User
-from User.schemas import SUserBase, SUserCreate, SUser
-from SystemRole.models import SystemRole
-from SystemRole.schemas import SSystemRole, SSystemRoleBase, SSystemRoleCreate
-from Event.models import Event
-from Event.schemas import SEvent, SEventBase, SEventCreate
+from back.SystemReview.models import SystemReview
+from back.SystemReview.schemas import SSystemReview, SSystemReviewBase, SSystemReviewCreate
+from back.User.models import User
+from back.User.schemas import SUserBase, SUserCreate, SUser
+from back.SystemRole.models import SystemRole
+from back.SystemRole.schemas import SSystemRole, SSystemRoleBase, SSystemRoleCreate
+from back.Event.models import Event
+from back.Event.schemas import SEvent, SEventBase, SEventCreate
 
 async def get_user(user_id: int):
     async with async_session_maker() as session:
@@ -25,8 +25,8 @@ async def get_user_by_email(email: str):
 
 async def create_user(user: SUserCreate, system_role_id:int):
     async with async_session_maker() as session:
-        db_user = User(email=user.email, 
-                        system_role_id=system_role_id, 
+        db_user = User(email=user.email,
+                        system_role_id=system_role_id,
                         hashed_password = passlib.hash.bcrypt.hash(user.hashed_password),
                         first_name = user.first_name,
                         last_name = user.last_name,
@@ -55,7 +55,7 @@ async def create_system_role(role: SSystemRoleCreate):
         await session.commit()
         await session.refresh(db_role)
         return db_role
-    
+
 async def create_event(event: SEventCreate):
     async with async_session_maker() as session:
         db_event = Event(event_name = event.event_name,

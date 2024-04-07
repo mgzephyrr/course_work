@@ -2,14 +2,14 @@ from datetime import timedelta
 import re
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt.exceptions import JWTException
 from jose import jwt
 
-from Token.schemas import Token
-from User.schemas import SUser, SUserCreate
-import auth
-from config import settings
-import crud
-from jwt.exceptions import JWTException
+from back.Token.schemas import Token
+from back.User.schemas import SUser, SUserCreate
+from back import auth
+from back.config import settings
+from back import crud
 
 
 router = APIRouter(
@@ -30,9 +30,9 @@ async def create_user(user: SUserCreate, system_role_id: int) -> SUser:
         db_user = await crud.get_user_by_email(email=user.email)
         if db_user:
             raise HTTPException(status_code=400, detail="Email already in use")
-        
+
         return await crud.create_user(user=user, system_role_id=system_role_id)
-    else: 
+    else:
         raise HTTPException(status_code=400, detail="Only email addresses ending with @edu.hse.ru are allowed")
 
 @router.post("/login", response_model=Token)
