@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from '@/components/ui/button';
-import { session_url } from '@/constants';
-import axios from 'axios';
 import React from 'react'
 
 const Home = () => {

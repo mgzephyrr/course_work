@@ -24,3 +24,14 @@ export const SignUpSchema = z.object({
         message: "Минимальная длина пароля: 6 символов"
     }),
 })
+
+export const EventSchema = z.object({
+    id: z.number(),
+    event_name: z.string(),
+    event_description: z.string(),
+    starting_time: z.date(),
+    ending_time: z.date(),
+    location: z.string(),
+    participants_count: z.number(),
+    admin_comment: z.string()
+})

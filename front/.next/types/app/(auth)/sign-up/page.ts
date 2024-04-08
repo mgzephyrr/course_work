@@ -1,4 +1,4 @@
-// File: D:\course\course_work\front\app\(auth)\sign-up\page.tsx
+// File: C:\Users\Admin\Desktop\course_work\front\app\(auth)\sign-up\page.tsx
 import * as entry from '../../../../../app/(auth)/sign-up/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
