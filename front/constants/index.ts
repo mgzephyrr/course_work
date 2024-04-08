@@ -22,3 +22,4 @@ export const sidebarLinks = [
 ]
 
 export const WebSiteName = 'Название сайта'
+export const session_url = 'http://localhost:8000'

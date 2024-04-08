@@ -10,13 +10,11 @@ from back.User.schemas import SUser, SUserCreate
 from back import auth
 from back.config import settings
 from back import crud
-
-
 router = APIRouter(
     prefix = "/auth"
 )
 
-email_regex = r'^[a-zA-Z0-9_.+-]+@edu\.hse\.ru$'
+email_regex = r'^[a-zA-Z0-9_.+-]+@edu\.hse\.ru$' or r'^[a-zA-Z0-9_.+-]+@hse\.ru$'
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -24,6 +22,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 @router.post("/signup")
 async def create_user(user: SUserCreate, system_role_id: int = 3) -> SUser:
     if re.match(email_regex, user.email):
+        # !!!!!!!!! Если почта заканчивается на @edu.hse.ru то выдать роль student
         db_role = await crud.get_system_role(system_role_id = system_role_id)
         if not db_role:
             raise HTTPException(status_code=400, detail="Role does not exist")
@@ -37,6 +36,7 @@ async def create_user(user: SUserCreate, system_role_id: int = 3) -> SUser:
 
 @router.post("/login", response_model=Token)
 async def login_for_access_token(from_data: OAuth2PasswordRequestForm = Depends()):
+    print(from_data)
     db_user = await crud.get_user_by_email(email=from_data.username)
     if not db_user or not auth.verify_password(from_data.password, db_user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect email or password")

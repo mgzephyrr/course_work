@@ -13,6 +13,7 @@ import { Button } from "../ui/button"
 import { FormError } from "../form-error"
 import { FormSuccess } from "../form-success"
 import { useState } from "react"
+import { session_url } from "@/constants"
 
 export const SignUpForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -22,9 +23,9 @@ export const SignUpForm = () => {
         resolver: zodResolver(SignUpSchema),
         defaultValues: {
             email: "",
-            password: "",
-            name: "",
-            surname: "",
+            hashed_password: "",
+            first_name: "",
+            last_name: "",
             paternity: "",
         },
     })
@@ -33,12 +34,30 @@ export const SignUpForm = () => {
         setError("");
         setSuccess("");
 
-        axios.post("/your/api/route", values)
-        .then((data) => {
-            setError(/*data.error*/"");   // ДОПИСАТЬ
-            setSuccess(/*data.error*/""); // ДОПИСАТЬ
-        })
-        .catch()
+        axios.post(session_url + "/auth/signup", values)
+            .then((data) => {
+                console.log(data)
+                setError(/*data.error*/"");   // ДОПИСАТЬ
+                setSuccess(/*data.error*/""); // ДОПИСАТЬ
+            })
+            .catch((e) => {
+                const expectedErr = "Email already in use";
+                if (e.response.status !== 400 || e.response.data.detail !== expectedErr) {
+                    throw e;
+                }
+                setError("Пользователь с такой почтой уже зарегистрирован!")
+                console.log('Error on Authentication')
+                console.log(e)
+            })
+            .catch((e) => {
+                const expectedErr = "Only email addresses ending with @edu.hse.ru are allowed";
+                if (e.response.status !== 400 || e.response.data.detail !== expectedErr) {
+                    throw '';
+                }
+                setError("Допускаются только почты, оканчивающиеся на @edu.hse.ru")
+                console.log('Error on Authentication')
+                console.log(e)
+            })
     }
 
     return (
@@ -72,7 +91,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="first_name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Имя</FormLabel>
@@ -88,7 +107,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="surname"
+                            name="last_name"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Фамилия</FormLabel>
@@ -120,7 +139,7 @@ export const SignUpForm = () => {
                         />
                         <FormField
                             control={form.control}
-                            name="password"
+                            name="hashed_password"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Пароль</FormLabel>
@@ -136,7 +155,7 @@ export const SignUpForm = () => {
                             )}
                         />
                     </div>
-                    <FormError message={error}/>
+                    <FormError message={error} />
                     <FormSuccess message={success} />
                     <Button
                         type="submit"

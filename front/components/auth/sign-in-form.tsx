@@ -11,32 +11,42 @@ import { CardWrapper } from "./card-wrapper"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FormError } from "../form-error"
-import { FormSuccess } from "../form-success"
 import { useState } from "react"
+import { session_url } from "@/constants"
 
 export const SignInForm = () => {
     const [error, setError] = useState<string | undefined>("");
-    const [success, setSuccess] = useState<string | undefined>("");
 
     const form = useForm<z.infer<typeof SignInSchema>>({
         resolver: zodResolver(SignInSchema),
         defaultValues: {
-            email: "",
+            username: "",
             password: ""
         },
     })
 
-    const onSubmit = (values: z.infer<typeof SignInSchema>) => {
+    const onSubmit = () => {
         setError("");
-        setSuccess("");
-        console.log(values)
+        const formValues = document.getElementById("loginForm") as HTMLFormElement;
 
-        axios.post("/auth/login", values)
+        axios.post(session_url + "/auth/login", new FormData(formValues))
         .then((data) => {
-            setError(/*data.error*/"");   // ДОПИСАТЬ
-            setSuccess(/*data.error*/""); // ДОПИСАТЬ
+            console.log('Authenticated');
+            console.log(data.data)
+            setError("");
         })
-        .catch()
+        .catch((e) => {
+            if (e.response.status !== 401){
+                throw '';
+            }
+            setError("Неверный логин или пароль");
+            console.log('No such user');
+        })
+        .catch((e) => {
+            setError("Произошла непредвиденная ошибка");
+            console.log('Unlucky');
+            console.log(e)
+        })
     }
 
     return (
@@ -46,14 +56,14 @@ export const SignInForm = () => {
             backButtonHref="/sign-up"
         >
             <Form {...form}>
-                <form
+                <form id="loginForm"
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-6"
                 >
                     <div className="space-y-4">
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="username"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Электронная почта</FormLabel>
@@ -87,7 +97,6 @@ export const SignInForm = () => {
                         />
                     </div>
                     <FormError message={error}/>
-                    <FormSuccess message={success} />
                     <Button
                         type="submit"
                         className="w-full"

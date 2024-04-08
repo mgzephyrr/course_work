@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
+import { session_url } from '@/constants';
 import axios from 'axios';
 import React from 'react'
 
@@ -11,7 +12,7 @@ const Home = () => {
   const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(now); // должна быть дата и время мероприятия
 
   const onClick = () => {
-    axios.get("http://localhost:8000/events")
+    axios.get(session_url + "/events")
     .then((data) => {
       console.log(data.data)
     })
