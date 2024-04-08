@@ -11,7 +11,7 @@ class SEventBase(BaseModel):
     participants_count: int
 
 class SEventCreate(SEventBase):
-    admin_comment: Optional[str] = None
+    admin_comment: str | None = None
     pass
 
 class SEvent(SEventBase):

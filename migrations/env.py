@@ -13,6 +13,7 @@ sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 from back.database import Base
 from back.SystemRole.models import SystemRole
 from back.SystemReview.models import SystemReview
+from back.EventParticipant.models import EventParticipant
 from back.User.models import User
 from back.Event.models import Event
 from back.config import settings

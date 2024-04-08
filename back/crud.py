@@ -10,6 +10,8 @@ from back.SystemRole.models import SystemRole
 from back.SystemRole.schemas import SSystemRole, SSystemRoleBase, SSystemRoleCreate
 from back.Event.models import Event
 from back.Event.schemas import SEvent, SEventBase, SEventCreate
+from back.EventParticipant.schemas import SEventParticipant, SEventParticipantCreate
+from back.EventParticipant.models import EventParticipant
 
 async def get_user(user_id: int):
     async with async_session_maker() as session:
@@ -74,3 +76,21 @@ async def get_all_events() -> list[Event]:
     async with async_session_maker() as session:
         result = await session.execute(select(Event))
         return result.scalars().all()
+
+async def get_event_participants_by_event_id(event_id: int) -> list[EventParticipant]:
+    async with async_session_maker() as session:
+        statement = select(SEventParticipant).where(SEventParticipant.event_id == event_id)
+        result = await session.execute(statement)
+        return result.scalars().all()
+    
+async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate):
+    async with async_session_maker() as session:
+        db_event_participant = EventParticipant(event_id = event_id, 
+                                                user_id = user_id, 
+                                                event_rewiew = event_participant.event_rewiew, 
+                                                event_rating = event_participant.event_rating, 
+                                                organizer_comment = event_participant.organizer_comment)
+        session.add(db_event_participant)
+        await session.commit()
+        await session.refresh(db_event_participant)
+        return db_event_participant

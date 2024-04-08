@@ -12,4 +12,6 @@ class Event(Base):
     ending_time = Column(DateTime, nullable=False)
     location = Column(String(100), nullable=False)
     participants_count = Column(Integer, nullable=False)
-    admin_comment = Column(Text)
+    admin_comment = Column(Text, nullable=True)
+    
+    eventparticipants = relationship("EventParticipant", back_populates="event", cascade='save-update, merge, delete')

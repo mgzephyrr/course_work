@@ -16,7 +16,7 @@ class SUserAuth(BaseModel):
 
 class SUser(SUserBase):
     id: int
-    system_role_id: int
+    system_role_id: int = 3
 
     class Config:
         orm_mode = True
