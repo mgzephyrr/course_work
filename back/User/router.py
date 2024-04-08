@@ -22,7 +22,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 @router.post("/signup")
-async def create_user(user: SUserCreate, system_role_id: int = 1) -> SUser:
+async def create_user(user: SUserCreate, system_role_id: int = 3) -> SUser:
     if re.match(email_regex, user.email):
         db_role = await crud.get_system_role(system_role_id = system_role_id)
         if not db_role:
