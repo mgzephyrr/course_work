@@ -1,4 +1,4 @@
-// File: C:\Users\Kirill\Desktop\learning\coursach\course_work\front\app\(auth)\sign-in\page.tsx
+// File: D:\course\course_work\front\app\(auth)\sign-in\page.tsx
 import * as entry from '../../../../../app/(auth)/sign-in/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

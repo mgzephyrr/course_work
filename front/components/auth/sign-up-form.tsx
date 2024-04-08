@@ -36,9 +36,8 @@ export const SignUpForm = () => {
 
         axios.post(session_url + "/auth/signup", values)
             .then((data) => {
-                console.log(data)
-                setError(/*data.error*/"");   // ДОПИСАТЬ
-                setSuccess(/*data.error*/""); // ДОПИСАТЬ
+                setError("");
+                setSuccess("На указанный адрес электронной почты отправлено письмо для подтверждения регистрации!");
             })
             .catch((e) => {
                 const expectedErr = "Email already in use";

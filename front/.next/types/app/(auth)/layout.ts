@@ -1,4 +1,4 @@
-// File: C:\Users\Kirill\Desktop\learning\coursach\course_work\front\app\(auth)\layout.tsx
+// File: D:\course\course_work\front\app\(auth)\layout.tsx
 import * as entry from '../../../../app/(auth)/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
