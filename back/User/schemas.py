@@ -8,7 +8,6 @@ class SUserBase(BaseModel):
 
 class SUserCreate(SUserBase):
     hashed_password: str
-    pass
 
 class SUserAuth(BaseModel):
     email: str
@@ -16,7 +15,7 @@ class SUserAuth(BaseModel):
 
 class SUser(SUserBase):
     id: int
-    system_role_id: int
+    system_role_id: int = 3
 
     class Config:
         orm_mode = True

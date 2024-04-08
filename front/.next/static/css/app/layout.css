@@ -1391,6 +1391,13 @@ video {
   }
 }
 
+@media (min-width: 768px) {
+
+  .md\:h-auto {
+    height: auto;
+  }
+}
+
 @media (min-width: 1024px) {
 
   .lg\:w-\[264px\] {

@@ -1,3 +1,10 @@
 {
+<<<<<<< HEAD
   "/(root)/(home)/page": "app/(root)/(home)/page.js"
+=======
+  "/(root)/(home)/page": "app/(root)/(home)/page.js",
+  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
+  "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
+  "/(auth)/sign-up/page": "app/(auth)/sign-up/page.js"
+>>>>>>> 7445e78a4e530214b3e7209c202d8725f4e5868d
 }

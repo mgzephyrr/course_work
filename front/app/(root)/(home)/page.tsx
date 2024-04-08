@@ -9,15 +9,16 @@ const Home = () => {
   const now = new Date();
 
   const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); // должна быть дата и время мероприятия
-  const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(now); // должна быть дата и время мероприятия
+  const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(now);   // должна быть дата и время мероприятия
 
-  const onClick = () => {
-    axios.get(session_url + "/events")
-    .then((data) => {
-      console.log(data.data)
-    })
-    .catch()
-  }
+  // надо поменять на вывод самого ближайшего мероприятия
+  //const onClick = () => {
+  //  axios.get(session_url + "/events")
+  //  .then((data) => {
+  //    console.log(data.data)
+  //  })
+  //  .catch()
+  //}
 
   return (
       <section className='flex size-full flex-col gap-5 text-white
@@ -35,9 +36,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <Button onClick={onClick}>
-          Click me!
-        </Button>
       </section>
   )
 }

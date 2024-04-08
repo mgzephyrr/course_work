@@ -12,10 +12,11 @@ class User(Base):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     paternity = Column(String(50), nullable=True)
-    system_role_id = Column(Integer, ForeignKey('system_roles.id', ondelete='CASCADE'), default=1)
+    system_role_id = Column(Integer, ForeignKey('system_roles.id', ondelete='CASCADE'), default=3)
 
-    reviews = relationship("SystemReview", back_populates="user")
+    reviews = relationship("SystemReview", back_populates="user", cascade='save-update, merge, delete')
     system_role = relationship("SystemRole", back_populates="users", cascade='save-update, merge, delete', passive_deletes=True)
+    eventparticipant = relationship("EventParticipant", back_populates="user", cascade='save-update, merge, delete')
 
     def verify_password(self, password: str):
         return passlib.hash.bcrypt.verify(password, self.hashed_password)

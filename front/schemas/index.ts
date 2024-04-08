@@ -10,17 +10,17 @@ export const SignInSchema = z.object({
 })
 
 export const SignUpSchema = z.object({
-    email: z.string().email({
-        message: "Пожалуйста, введите вашу почту"
-    }),
-    hashed_password: z.string().min(6, {
-        message: "Минимальная длина пароля: 6 символов"
-    }),
     first_name: z.string().min(1, {
         message: "Пожалуйста, введите ваше имя"
     }),
     last_name: z.string().min(1, {
         message: "Пожалуйста, введите вашу фамилию"
     }),
-    paternity: z.string()
+    paternity: z.string(),
+    email: z.string().email({
+        message: "Пожалуйста, введите вашу почту"
+    }),
+    hashed_password: z.string().min(6, {
+        message: "Минимальная длина пароля: 6 символов"
+    }),
 })
