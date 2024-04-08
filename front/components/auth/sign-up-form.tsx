@@ -30,19 +30,34 @@ export const SignUpForm = () => {
         },
     })
 
-    const onSubmit = async (values: z.infer<typeof SignUpSchema>) => {
+    const onSubmit = (values: z.infer<typeof SignUpSchema>) => {
         setError("");
         setSuccess("");
 
-        axios.post(session_url + "/auth/signup", JSON.stringify(values))
-        .then((data) => {
-            setError(/*data.error*/"");   // ДОПИСАТЬ
-            setSuccess(/*data.error*/""); // ДОПИСАТЬ
-        })
-        .catch(() => {
-            console.log('Error on Authentication')
-            console.log(values)
-        })
+        axios.post(session_url + "/auth/signup", values)
+            .then((data) => {
+                console.log(data)
+                setError(/*data.error*/"");   // ДОПИСАТЬ
+                setSuccess(/*data.error*/""); // ДОПИСАТЬ
+            })
+            .catch((e) => {
+                const expectedErr = "Email already in use";
+                if (e.response.status !== 400 || e.response.data.detail !== expectedErr) {
+                    throw e;
+                }
+                setError("Пользователь с такой почтой уже зарегистрирован!")
+                console.log('Error on Authentication')
+                console.log(e)
+            })
+            .catch((e) => {
+                const expectedErr = "Only email addresses ending with @edu.hse.ru are allowed";
+                if (e.response.status !== 400 || e.response.data.detail !== expectedErr) {
+                    throw '';
+                }
+                setError("Допускаются только почты, оканчивающиеся на @edu.hse.ru")
+                console.log('Error on Authentication')
+                console.log(e)
+            })
     }
 
     return (
@@ -140,7 +155,7 @@ export const SignUpForm = () => {
                             )}
                         />
                     </div>
-                    <FormError message={error}/>
+                    <FormError message={error} />
                     <FormSuccess message={success} />
                     <Button
                         type="submit"

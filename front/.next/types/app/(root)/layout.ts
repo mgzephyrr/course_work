@@ -1,4 +1,4 @@
-// File: C:\Users\Admin\Desktop\course_work\front\app\(root)\layout.tsx
+// File: C:\Users\Kirill\Desktop\learning\coursach\course_work\front\app\(root)\layout.tsx
 import * as entry from '../../../../app/(root)/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

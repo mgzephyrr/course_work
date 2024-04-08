@@ -8,7 +8,6 @@ class SUserBase(BaseModel):
 
 class SUserCreate(SUserBase):
     hashed_password: str
-    pass
 
 class SUserAuth(BaseModel):
     email: str

@@ -20,17 +20,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 @router.post("/signup")
-async def create_user(user: SUserCreate, system_role_id: int) -> SUser:
+async def create_user(user: SUserCreate, system_role_id: int = 3) -> SUser:
     if re.match(email_regex, user.email):
+        # !!!!!!!!! Если почта заканчивается на @edu.hse.ru то выдать роль student
         db_role = await crud.get_system_role(system_role_id = system_role_id)
         if not db_role:
             raise HTTPException(status_code=400, detail="Role does not exist")
         db_user = await crud.get_user_by_email(email=user.email)
         if db_user:
             raise HTTPException(status_code=400, detail="Email already in use")
-
-        # Если почта заканчивается на @edu.hse.ru то выдать роль student
-        # Иначе выдать роль user
 
         return await crud.create_user(user=user, system_role_id=system_role_id)
     else:
