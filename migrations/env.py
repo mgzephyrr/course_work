@@ -15,7 +15,11 @@ from back.SystemRole.models import SystemRole
 from back.SystemReview.models import SystemReview
 from back.EventParticipant.models import EventParticipant
 from back.User.models import User
+from back.EventOrganizer.models import EventOrganizer
+from back.StudentOrganizationRole.models import StudentOrganizationRole
+from back.StudentOrganizationMember.models import StudentOrganizationMember
 from back.Event.models import Event
+from back.StudentOrganization.models import StudentOrganization
 from back.config import settings
 
 # this is the Alembic Config object, which provides

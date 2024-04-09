@@ -17,6 +17,8 @@ class User(Base):
     reviews = relationship("SystemReview", back_populates="user", cascade='save-update, merge, delete')
     system_role = relationship("SystemRole", back_populates="users", cascade='save-update, merge, delete', passive_deletes=True)
     eventparticipant = relationship("EventParticipant", back_populates="user", cascade='save-update, merge, delete')
+    eventorganizer = relationship("EventOrganizer", back_populates="user", cascade='save-update, merge, delete')
+    student_organization_member = relationship("StudentOrganizationMember", back_populates="user", cascade='save-update, merge, delete')
 
     def verify_password(self, password: str):
         return passlib.hash.bcrypt.verify(password, self.hashed_password)

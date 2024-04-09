@@ -3,7 +3,7 @@ from sqlalchemy import CheckConstraint, Column, ForeignKey, Integer, String, Tex
 from sqlalchemy.orm import relationship
 
 class EventParticipant(Base):
-    __tablename__ = 'eventparticipants'
+    __tablename__ = 'event_participants'
     
     id = Column(Integer, primary_key=True)
     event_id = Column(Integer, ForeignKey('events.id'))

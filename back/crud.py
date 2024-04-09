@@ -12,6 +12,8 @@ from back.Event.models import Event
 from back.Event.schemas import SEvent, SEventBase, SEventCreate
 from back.EventParticipant.schemas import SEventParticipant, SEventParticipantCreate
 from back.EventParticipant.models import EventParticipant
+from back.StudentOrganization.models import StudentOrganization
+from back.StudentOrganization.schemas import SStudentOrganization, SStudentOrganizationBase, SStudentOrganizationCreate
 
 async def get_user(user_id: int):
     async with async_session_maker() as session:
@@ -94,3 +96,19 @@ async def create_event_participant(event_id: int, user_id: int, event_participan
         await session.commit()
         await session.refresh(db_event_participant)
         return db_event_participant
+    
+async def create_student_org(student_org: SStudentOrganizationCreate):
+    async with async_session_maker() as session:
+        db_student_org = StudentOrganization(stud_org_name = student_org.stud_org_name,
+                                             stud_org_description = student_org.stud_org_description,
+                                             vk_link = student_org.vk_link,
+                                             telegram_link = student_org.telegram_link)
+        session.add(db_student_org)
+        await session.commit()
+        await session.refresh(db_student_org)
+        return db_student_org
+
+async def get_all_student_org() -> list[StudentOrganization]:
+    async with async_session_maker() as session:
+        result = await session.execute(select(StudentOrganization))
+        return result.scalars().all()
