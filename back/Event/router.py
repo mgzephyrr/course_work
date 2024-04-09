@@ -11,6 +11,10 @@ router = APIRouter(
     prefix = "/events"
 )
 
+@router.get("/upcoming")
+async def get_upcoming_event() -> SEvent:
+    return await crud.get_upcoming_event_from_db()
+
 @router.post("/create")
 async def create_event(event: SEventCreate) -> SEvent:
     return await crud.create_event(event=event)

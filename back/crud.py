@@ -1,5 +1,6 @@
 from sqlalchemy import insert, select
 from back.database import async_session_maker
+from datetime import datetime
 import passlib.hash
 
 from back.SystemReview.models import SystemReview
@@ -90,6 +91,13 @@ async def get_event_participants_by_event_id(event_id: int) -> list[EventPartici
         query = select(EventParticipant).where(EventParticipant.event_id == event_id)
         result = await session.execute(query)
         return result.scalars().all()
+
+async def get_upcoming_event_from_db() -> Event:
+    async with async_session_maker() as session:
+            current_time = datetime.utcnow()
+            query = select(Event).filter(Event.starting_time > current_time).order_by(Event.starting_time)
+            result = await session.execute(query)
+            return result.scalars().first()
     
 async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate):
     async with async_session_maker() as session:

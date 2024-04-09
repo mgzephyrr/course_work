@@ -8,6 +8,9 @@ class SEventBase(BaseModel):
     ending_time: datetime
     location: str
     participants_count: int
+    
+    class Config:
+        orm_mode = True
 
 class SEventCreate(SEventBase):
     admin_comment: str | None = None

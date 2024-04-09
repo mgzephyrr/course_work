@@ -9,7 +9,7 @@ class EventParticipant(Base):
     event_id = Column(Integer, ForeignKey('events.id'))
     user_id = Column(Integer, ForeignKey('users.id'))
     event_rewiew = Column(Text, nullable=True)
-    event_rating = Column(Integer, nullable=False)
+    event_rating = Column(Integer, nullable=True)
     organizer_comment = Column(Text, nullable=True)
     
     user = relationship("User", back_populates="eventparticipant", cascade='save-update, merge, delete')
