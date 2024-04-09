@@ -1,0 +1,1 @@
+{"c":["app/layout","app/(auth)/sign-up/page","app/(auth)/sign-in/page","webpack"],"r":[],"m":["(app-pages-browser)/./components/auth/header.tsx","(app-pages-browser)/./node_modules/next/font/google/target.css?{\"path\":\"components\\\\auth\\\\header.tsx\",\"import\":\"Poppins\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"600\"]}],\"variableName\":\"font\"}"]}

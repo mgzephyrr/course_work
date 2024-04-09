@@ -61,8 +61,8 @@ export const SignUpForm = () => {
 
     return (
         <CardWrapper
-            headerLabel="Создавай акк. СУКА"
-            backButtonLabel="Уже есть акк?? Красавчик"
+            headerLabel="Присоединяйтесь к нашей системе!"
+            backButtonLabel="Уже есть аккаунт? Авторизуйтесь!"
             backButtonHref="/sign-in"
         >
             <Form {...form}>

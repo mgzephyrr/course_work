@@ -5,7 +5,7 @@ import React from 'react'
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Image from "next/image"
 import Link from "next/link"
-import { sidebarLinks } from "@/constants"
+import { WebSiteName, sidebarLinks } from "@/constants"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
@@ -33,7 +33,7 @@ const MobileNav = () => {
                         alt='Site-logo'
                         className='max-sm:size-10'
                         />
-                        <p className='text-[26px] text-blue-2 font-extrabold'> бебебе </p>
+                        <p className='text-[26px] text-blue-2 font-extrabold'> {WebSiteName} </p>
                     </Link>
                     <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
                         <SheetClose asChild>

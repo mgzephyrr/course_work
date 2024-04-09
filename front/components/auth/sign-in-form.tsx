@@ -3,6 +3,7 @@ import * as z from "zod"
 import axios from "axios"
 
 import { useForm } from "react-hook-form"
+import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormControl, FormField, FormLabel, FormItem, FormMessage } from "@/components/ui/form"
 
@@ -16,6 +17,7 @@ import { session_url } from "@/constants"
 
 export const SignInForm = () => {
     const [error, setError] = useState<string | undefined>("");
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof SignInSchema>>({
         resolver: zodResolver(SignInSchema),
@@ -32,11 +34,11 @@ export const SignInForm = () => {
         axios.post(session_url + "/auth/login", new FormData(formValues))
         .then((data) => {
             console.log('Authenticated');
-            console.log(data.data)
             setError("");
+            router.push('/')
         })
         .catch((e) => {
-            if (e.response.status !== 401){
+            if (e && e.response.status !== 401){
                 throw '';
             }
             setError("Неверный логин или пароль");
@@ -51,8 +53,8 @@ export const SignInForm = () => {
 
     return (
         <CardWrapper
-            headerLabel="Снова тут? АХУЕТЬ"
-            backButtonLabel="Нет акка? :( регайся чудик"
+            headerLabel="Добро пожаловать!"
+            backButtonLabel="Нет аккаунта? Зарегистрируйтесь!"
             backButtonHref="/sign-up"
         >
             <Form {...form}>
