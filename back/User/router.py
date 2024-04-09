@@ -11,6 +11,7 @@ from fastapi.responses import FileResponse
 
 from back.Token.schemas import Token
 from back.User.schemas import SUser, SUserCreate
+from back.images_upload.repo import upload_image
 from back import auth
 from back.config import settings
 from back import crud
@@ -69,28 +70,8 @@ async def protected_route(user: SUser = Depends(get_current_user)):
 
 @router.post("/createavatar")
 async def create_upload_file(file: UploadFile = File(...), user: SUser = Depends(get_current_user)):
-    if not file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
-        raise HTTPException(status_code=400, detail="Only JPEG, JPG and PNG files are allowed")
-    
-    if file.size > settings.MAX_FILE_SIZE_BYTES:
-        raise HTTPException(status_code=400, detail="File size too large. Maximum size is 1 megabyte.")
-    
-    file.filename = f"{uuid.uuid4()}.jpg"
-    contents = await file.read()
-    
-    with open(f"{settings.IMAGEDIR}{file.filename}", "wb") as f:
-        f.write(contents)
-    
-    # Дополнительная проверка на валидность изображения
-    try:
-        image = Image.open(f"{settings.IMAGEDIR}{file.filename}")
-        image.verify()  # Проверка на валидность изображения
-        image.close()
-    except Exception as e:
-        os.remove(f"{settings.IMAGEDIR}{file.filename}")
-        raise HTTPException(status_code=400, detail="Uploaded file is not a valid JPEG image")
-    
-    return await crud.add_avatar_to_current_user(file_name=file.filename, user_id=user.id)
+    newFile = await upload_image(file)
+    return await crud.add_avatar_to_current_user(file_name=newFile.filename, user_id=user.id)
 
 @router.get("/myavatar")
 async def load_current_user_avatar(user: SUser = Depends(get_current_user)) -> FileResponse:
@@ -101,7 +82,7 @@ async def load_current_user_avatar(user: SUser = Depends(get_current_user)) -> F
     
     return FileResponse(file_path)
 
-@router.get("/avatar/{user_id}")
+@router.get("/{user_id}/avatar")
 async def load_user_avatar_by_id(user_id: int) -> FileResponse:
     file_name = await crud.load_user_avatar(user_id=user_id)
     file_path = f"{settings.IMAGEDIR}{file_name}"

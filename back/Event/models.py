@@ -13,6 +13,7 @@ class Event(Base):
     location = Column(String(100), nullable=False)
     participants_count = Column(Integer, nullable=False)
     admin_comment = Column(Text, nullable=True)
+    image_file_name = Column(String, nullable=True)
     
     eventparticipants = relationship("EventParticipant", back_populates="event", cascade='save-update, merge, delete')
     organizers = relationship("EventOrganizer", back_populates="event", cascade='save-update, merge, delete')

@@ -22,6 +22,19 @@ from back.StudentOrganizationRole.schemas import SStudentOrganizationRole, SStud
 from back.EventOrganizer.models import EventOrganizer
 from back.EventOrganizer.schemas import SEventOrganizer
 
+async def load_event_image(event_id: int):
+    async with async_session_maker() as session:
+        event = await session.get(Event, event_id)
+        return event.image_file_name
+
+async def add_event_image(file_name: str, event_id: int):
+    async with async_session_maker() as session:
+        event = await session.get(Event, event_id)
+        event.image_file_name = file_name
+        await session.commit()
+        await session.refresh(event)
+        return file_name
+
 async def add_avatar_to_student_org(file_name: str, stud_org_id: int):
     async with async_session_maker() as session:
         stud_org = await session.get(StudentOrganization, stud_org_id)
@@ -36,10 +49,10 @@ async def load_student_org_avatar(stud_org_id: int):
         return stud_org.avatar_file_name
 
 
-async def load_user_avatar(stud_org_id: int):
+async def load_user_avatar(user_id: int):
     async with async_session_maker() as session:
-        stud_org = await session.get(StudentOrganization, stud_org_id)
-        return stud_org.avatar_file_name
+        user = await session.get(User, user_id)
+        return user.avatar_file_name
 
 async def add_avatar_to_current_user(file_name: str, user_id: int):
     async with async_session_maker() as session:
@@ -95,7 +108,7 @@ async def create_system_role(role: SSystemRoleCreate):
         await session.refresh(db_role)
         return db_role
 
-async def create_event(event: SEventCreate):
+async def create_event(event: SEventCreate, file_name: str):
     async with async_session_maker() as session:
         db_event = Event(event_name = event.event_name,
                          event_description = event.event_description,
@@ -103,7 +116,8 @@ async def create_event(event: SEventCreate):
                          ending_time = event.ending_time,
                          location = event.location,
                          participants_count = event.participants_count,
-                         admin_comment = event.admin_comment)
+                         admin_comment = event.admin_comment,
+                         image_file_name = file_name)
         session.add(db_event)
         await session.commit()
         await session.refresh(db_event)
@@ -139,12 +153,13 @@ async def create_event_participant(event_id: int, user_id: int, event_participan
         await session.refresh(db_event_participant)
         return db_event_participant
     
-async def create_student_org(student_org: SStudentOrganizationCreate):
+async def create_student_org(student_org: SStudentOrganizationCreate, file_name:str):
     async with async_session_maker() as session:
         db_student_org = StudentOrganization(stud_org_name = student_org.stud_org_name,
                                              stud_org_description = student_org.stud_org_description,
                                              vk_link = student_org.vk_link,
-                                             telegram_link = student_org.telegram_link)
+                                             telegram_link = student_org.telegram_link,
+                                             avatar_file_name=file_name)
         session.add(db_student_org)
         await session.commit()
         await session.refresh(db_student_org)

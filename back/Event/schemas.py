@@ -18,6 +18,7 @@ class SEventCreate(SEventBase):
 
 class SEvent(SEventBase):
     id: int
+    image_file_name: str | None = None
 
     class Config:
         orm_mode = True
