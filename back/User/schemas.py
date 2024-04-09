@@ -8,6 +8,7 @@ class SUserBase(BaseModel):
 
 class SUserCreate(SUserBase):
     hashed_password: str
+    avatar_file_name: str | None = None
 
 class SUserAuth(BaseModel):
     email: str

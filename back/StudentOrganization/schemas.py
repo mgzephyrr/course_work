@@ -11,6 +11,7 @@ class SStudentOrganizationCreate(SStudentOrganizationBase):
 
 class SStudentOrganization(SStudentOrganizationBase):
     id: int
+    avatar_file_name: str | None = None
     
     class Config:
         orm_mode = True

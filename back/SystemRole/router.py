@@ -5,7 +5,8 @@ from back import crud
 
 
 router = APIRouter(
-    prefix="/role"
+    prefix="/role",
+    tags= ["Работа с системными ролями"]
 )
 
 @router.post("/roles")

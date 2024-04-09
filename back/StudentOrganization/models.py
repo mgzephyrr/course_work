@@ -10,6 +10,7 @@ class StudentOrganization(Base):
     stud_org_description = Column(Text, nullable=False)
     vk_link = Column(String, nullable=True)
     telegram_link = Column(String, nullable=True)
+    avatar_file_name = Column(String, nullable=True)
     
     eventorganizer = relationship("EventOrganizer", back_populates="student_organization", cascade='save-update, merge, delete')
     student_organization_members = relationship("StudentOrganizationMember", back_populates="student_organization", cascade='save-update, merge, delete')

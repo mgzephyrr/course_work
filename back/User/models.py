@@ -13,6 +13,7 @@ class User(Base):
     last_name = Column(String(50), nullable=False)
     paternity = Column(String(50), nullable=True)
     system_role_id = Column(Integer, ForeignKey('system_roles.id', ondelete='CASCADE'), default=3)
+    avatar_file_name = Column(String, nullable=True)
 
     reviews = relationship("SystemReview", back_populates="user", cascade='save-update, merge, delete')
     system_role = relationship("SystemRole", back_populates="users", cascade='save-update, merge, delete', passive_deletes=True)

@@ -22,6 +22,34 @@ from back.StudentOrganizationRole.schemas import SStudentOrganizationRole, SStud
 from back.EventOrganizer.models import EventOrganizer
 from back.EventOrganizer.schemas import SEventOrganizer
 
+async def add_avatar_to_student_org(file_name: str, stud_org_id: int):
+    async with async_session_maker() as session:
+        stud_org = await session.get(StudentOrganization, stud_org_id)
+        stud_org.avatar_file_name = file_name
+        await session.commit()
+        await session.refresh(stud_org)
+        return file_name
+
+async def load_student_org_avatar(stud_org_id: int):
+    async with async_session_maker() as session:
+        stud_org = await session.get(StudentOrganization, stud_org_id)
+        return stud_org.avatar_file_name
+
+
+async def load_user_avatar(stud_org_id: int):
+    async with async_session_maker() as session:
+        stud_org = await session.get(StudentOrganization, stud_org_id)
+        return stud_org.avatar_file_name
+
+async def add_avatar_to_current_user(file_name: str, user_id: int):
+    async with async_session_maker() as session:
+        user = await session.get(User, user_id)
+        user.avatar_file_name = file_name
+        await session.commit()
+        await session.refresh(user)
+        return file_name
+        
+
 async def get_user(user_id: int):
     async with async_session_maker() as session:
         query = select(User).filter(User.id == user_id)

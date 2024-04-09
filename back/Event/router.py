@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -8,7 +8,8 @@ from back import crud
 from back.database import async_session_maker
 
 router = APIRouter(
-    prefix = "/events"
+    prefix = "/events",
+    tags= ["Работа с мероприятиями"]
 )
 
 @router.get("/upcoming")
