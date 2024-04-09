@@ -15,5 +15,5 @@ class Event(Base):
     admin_comment = Column(Text, nullable=True)
     
     eventparticipants = relationship("EventParticipant", back_populates="event", cascade='save-update, merge, delete')
-    eventorganizer = relationship("EventOrganizer", back_populates="event", cascade='save-update, merge, delete')
+    organizers = relationship("EventOrganizer", back_populates="event", cascade='save-update, merge, delete')
     

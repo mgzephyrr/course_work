@@ -14,6 +14,12 @@ from back.EventParticipant.schemas import SEventParticipant, SEventParticipantCr
 from back.EventParticipant.models import EventParticipant
 from back.StudentOrganization.models import StudentOrganization
 from back.StudentOrganization.schemas import SStudentOrganization, SStudentOrganizationBase, SStudentOrganizationCreate
+from back.StudentOrganizationMember.models import StudentOrganizationMember
+from back.StudentOrganizationMember.schemas import SStudentOrganizationMember
+from back.StudentOrganizationRole.models import StudentOrganizationRole
+from back.StudentOrganizationRole.schemas import SStudentOrganizationRole, SStudentOrganizationRoleBase, SStudentOrganizationRoleCreate
+from back.EventOrganizer.models import EventOrganizer
+from back.EventOrganizer.schemas import SEventOrganizer
 
 async def get_user(user_id: int):
     async with async_session_maker() as session:
@@ -81,8 +87,8 @@ async def get_all_events() -> list[Event]:
 
 async def get_event_participants_by_event_id(event_id: int) -> list[EventParticipant]:
     async with async_session_maker() as session:
-        statement = select(SEventParticipant).where(SEventParticipant.event_id == event_id)
-        result = await session.execute(statement)
+        query = select(EventParticipant).where(EventParticipant.event_id == event_id)
+        result = await session.execute(query)
         return result.scalars().all()
     
 async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate):
