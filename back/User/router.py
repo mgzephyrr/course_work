@@ -60,11 +60,7 @@ async def login_for_access_token(response: Response, from_data: OAuth2PasswordRe
     access_token = auth.create_access_token(
         data={"sub": db_user.email}, expires_delta=access_token_expires
     )
-<<<<<<< HEAD
     response.set_cookie(key="Authorization", value=access_token, httponly=True)
-=======
-    response.set_cookie(key="Authorization", value= access_token, httponly=False)
->>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -76,7 +72,6 @@ async def logout(response: Response):
 
 @router.get("/me")
 async def protected_route(user: User = Depends(get_current_user)):
-    print(user)
     return user
 
 

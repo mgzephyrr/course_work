@@ -19,6 +19,7 @@ class SEventCreate(SEventBase):
 class SEvent(SEventBase):
     id: int
     image_file_name: str | None = None
+    is_moderated: bool = False
 
     class Config:
         orm_mode = True

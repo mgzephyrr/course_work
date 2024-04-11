@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text, Boolean
 from back.database import Base
 from sqlalchemy.orm import relationship
 
@@ -14,6 +14,7 @@ class Event(Base):
     participants_count = Column(Integer, nullable=False)
     admin_comment = Column(Text, nullable=True)
     image_file_name = Column(String, nullable=True)
+    isModerated = Column(Boolean, unique=False, default=False)
     
     eventparticipants = relationship("EventParticipant", back_populates="event", cascade='save-update, merge, delete')
     organizers = relationship("EventOrganizer", back_populates="event", cascade='save-update, merge, delete')
