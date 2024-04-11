@@ -662,6 +662,8 @@ video {
 .z-50 {
   z-index: 50;
 }
+<<<<<<< HEAD
+=======
 .-mx-1 {
   margin-left: -0.25rem;
   margin-right: -0.25rem;
@@ -676,6 +678,7 @@ video {
 .mr-2 {
   margin-right: 0.5rem;
 }
+>>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
 .flex {
   display: flex;
 }
@@ -783,6 +786,14 @@ video {
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+<<<<<<< HEAD
+=======
+.cursor-pointer {
+  cursor: pointer;
+}
+<<<<<<< HEAD
+=======
+>>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
 .cursor-default {
   cursor: default;
 }
@@ -794,6 +805,7 @@ video {
      -moz-user-select: none;
           user-select: none;
 }
+>>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
 .flex-col {
   flex-direction: column;
 }
@@ -1002,6 +1014,7 @@ video {
 .p-6 {
   padding: 1.5rem;
 }
+<<<<<<< HEAD
 .p-px {
   padding: 1px;
 }
@@ -1009,6 +1022,17 @@ video {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 }
+=======
+<<<<<<< HEAD
+=======
+.p-1 {
+  padding: 0.25rem;
+}
+.p-px {
+  padding: 1px;
+}
+>>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
+>>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;

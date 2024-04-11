@@ -3,8 +3,54 @@
     "/(auth)/sign-in/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+<<<<<<< HEAD
       "static/css/app/(auth)/sign-in/page.css",
       "static/chunks/app/(auth)/sign-in/page.js"
+=======
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/(root)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/layout.js"
+    ],
+    "/(root)/(home)/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/page.js"
+    ],
+<<<<<<< HEAD
+    "/(auth)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(auth)/layout.js"
+    ],
+    "/(auth)/sign-in/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/(auth)/sign-in/page.css",
+      "static/chunks/app/(auth)/sign-in/page.js"
+    ],
+=======
+>>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
+    "/(root)/(home)/activities/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/activities/page.js"
+    ],
+    "/(root)/(home)/organisations/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/organisations/page.js"
+<<<<<<< HEAD
+=======
+    ],
+    "/(root)/(home)/feedback/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/feedback/page.js"
+>>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
     ],
     "/(auth)/layout": [
       "static/chunks/webpack.js",
@@ -14,8 +60,14 @@
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
+<<<<<<< HEAD
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
+=======
+      "static/css/app/(auth)/sign-in/page.css",
+      "static/chunks/app/(auth)/sign-in/page.js"
+>>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
+>>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
     ]
   }
 }

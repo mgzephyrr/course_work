@@ -15,7 +15,10 @@ def get_token(request: Request):
 
 async def get_current_user(token: str = Depends(get_token)):
     print(token)
+<<<<<<< HEAD
     print('111111111111111')
+=======
+>>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, settings.ALGORITHM
