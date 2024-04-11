@@ -1,7 +1,6 @@
 {
   "/(root)/(home)/page": "app/(root)/(home)/page.js",
-  "/(auth)/sign-up/page": "app/(auth)/sign-up/page.js",
   "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
   "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
-  "/(root)/activity/[id]/page": "app/(root)/activity/[id]/page.js"
+  "/(root)/(home)/organisations/page": "app/(root)/(home)/organisations/page.js"
 }

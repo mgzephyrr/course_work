@@ -1,15 +1,15 @@
 {
   "pages": {
-    "/(root)/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/layout.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
+    ],
+    "/(root)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/layout.js"
     ],
     "/(root)/(home)/page": [
       "static/chunks/webpack.js",
@@ -20,12 +20,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(auth)/layout.js"
-    ],
-    "/(auth)/sign-up/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(auth)/sign-up/page.css",
-      "static/chunks/app/(auth)/sign-up/page.js"
     ],
     "/(auth)/sign-in/page": [
       "static/chunks/webpack.js",
@@ -42,11 +36,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(root)/(home)/organisations/page.js"
-    ],
-    "/(root)/activity/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/activity/[id]/page.js"
     ]
   }
 }

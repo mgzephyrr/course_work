@@ -57,7 +57,7 @@ async def login_for_access_token(response: Response, from_data: OAuth2PasswordRe
     access_token = auth.create_access_token(
         data={"sub": db_user.email}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="Authorization", value= access_token, httponly=True)
+    response.set_cookie(key="Authorization", value= access_token, httponly=False)
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/logout")

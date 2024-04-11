@@ -14,6 +14,7 @@ def get_token(request: Request):
     return token
 
 async def get_current_user(token: str = Depends(get_token)):
+    print(token)
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, settings.ALGORITHM
