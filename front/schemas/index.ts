@@ -33,5 +33,8 @@ export const EventSchema = z.object({
     ending_time: z.date(),
     location: z.string(),
     participants_count: z.number(),
-    admin_comment: z.string()
+    admin_comment: z.string(),
+    image_file_name: z.string(),
+    eventparticipants: z.number(),
+    organizers: z.string()
 })

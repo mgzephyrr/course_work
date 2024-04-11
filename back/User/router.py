@@ -18,11 +18,12 @@ from back import auth
 from back.config import settings
 from back import crud
 router = APIRouter(
-    prefix = "/auth",
-    tags= ["Аутентификация", "Работа с пользователем"]
+    prefix="/auth",
+    tags=["Аутентификация", "Работа с пользователем"]
 )
 
 email_regex = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+
 
 @router.post("/signup")
 async def create_user(user: SUserCreate) -> SUser:
@@ -47,32 +48,39 @@ async def create_user(user: SUserCreate) -> SUser:
     else:
         raise HTTPException(status_code=400, detail="Invalid email format")
 
+
 @router.post("/login", response_model=Token)
 async def login_for_access_token(response: Response, from_data: OAuth2PasswordRequestForm = Depends()):
-    print(from_data)
     db_user = await crud.get_user_by_email(email=from_data.username)
     if not db_user or not auth.verify_password(from_data.password, db_user.hashed_password):
-        raise HTTPException(status_code=401, detail="Incorrect email or password")
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        raise HTTPException(
+            status_code=401, detail="Incorrect email or password")
+    access_token_expires = timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
         data={"sub": db_user.email}, expires_delta=access_token_expires
     )
-    response.set_cookie(key="Authorization", value= access_token, httponly=True)
+    response.set_cookie(key="Authorization", value=access_token, httponly=True)
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @router.post("/logout")
 async def logout(response: Response):
     response.delete_cookie("Authorization")
     return {"message": "Successfully logged out"}
 
+
 @router.get("/me")
 async def protected_route(user: User = Depends(get_current_user)):
+    print(user)
     return user
+
 
 @router.post("/createavatar")
 async def create_upload_file(file: UploadFile = File(...), user: SUser = Depends(get_current_user)):
     newFile = await upload_image(file)
     return await crud.add_avatar_to_current_user(file_name=newFile.filename, user_id=user.id)
+
 
 @router.get("/myavatar")
 async def load_current_user_avatar(user: SUser = Depends(get_current_user)) -> FileResponse:
@@ -80,8 +88,9 @@ async def load_current_user_avatar(user: SUser = Depends(get_current_user)) -> F
     file_path = f"{settings.IMAGEDIR}{file_name}"
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
-    
+
     return FileResponse(file_path)
+
 
 @router.get("/{user_id}/avatar")
 async def load_user_avatar_by_id(user_id: int) -> FileResponse:
@@ -89,5 +98,5 @@ async def load_user_avatar_by_id(user_id: int) -> FileResponse:
     file_path = f"{settings.IMAGEDIR}{file_name}"
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
-    
+
     return FileResponse(file_path)

@@ -1,6 +1,3 @@
 {
-  "/(root)/(home)/page": "app/(root)/(home)/page.js",
-  "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
-  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
-  "/(root)/(home)/organisations/page": "app/(root)/(home)/organisations/page.js"
+  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js"
 }

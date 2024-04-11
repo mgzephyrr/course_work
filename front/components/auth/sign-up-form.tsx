@@ -13,7 +13,7 @@ import { Button } from "../ui/button"
 import { FormError } from "../form-error"
 import { FormSuccess } from "../form-success"
 import { useState } from "react"
-import { session_url } from "@/constants"
+import { API_URL } from "@/constants"
 
 export const SignUpForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -34,7 +34,7 @@ export const SignUpForm = () => {
         setError("");
         setSuccess("");
 
-        axios.post(session_url + "/auth/signup", values)
+        axios.post(API_URL + "/auth/signup", values)
             .then((data) => {
                 setError("");
                 setSuccess("На указанный адрес электронной почты отправлено письмо для подтверждения регистрации!");

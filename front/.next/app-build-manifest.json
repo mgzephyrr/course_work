@@ -1,46 +1,21 @@
 {
   "pages": {
-    "/layout": [
+    "/(auth)/sign-in/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
-    ],
-    "/(root)/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/layout.js"
-    ],
-    "/(root)/(home)/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/(home)/page.js"
-    ],
-    "/(root)/(home)/activities/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/(home)/activities/page.js"
-    ],
-    "/(root)/(home)/organisations/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/(home)/organisations/page.js"
-    ],
-    "/(root)/(home)/feedback/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/(home)/feedback/page.js"
+      "static/css/app/(auth)/sign-in/page.css",
+      "static/chunks/app/(auth)/sign-in/page.js"
     ],
     "/(auth)/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(auth)/layout.js"
     ],
-    "/(auth)/sign-in/page": [
+    "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/(auth)/sign-in/page.css",
-      "static/chunks/app/(auth)/sign-in/page.js"
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ]
   }
 }

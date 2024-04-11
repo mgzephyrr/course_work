@@ -14,8 +14,12 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { API_URL } from "@/constants";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export function Profile() {
+    const router = useRouter();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -46,7 +50,15 @@ export function Profile() {
                             <span>Профиль</span>
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {}}>
+                    <DropdownMenuItem onClick={() => {
+                        axios.post(API_URL + '/auth/logout')
+                        .then(() => {
+                            router.push('/sign-in')
+                        })
+                        .catch((e) => {
+                            console.log('Unexpected error', e)
+                        })
+                    }}>
                         <LogOut className="mr-2 h-4 w-4"/>
                         <span>Выход</span>
                     </DropdownMenuItem>

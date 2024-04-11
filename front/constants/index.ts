@@ -21,5 +21,14 @@ export const sidebarLinks = [
     }
 ]
 
+export const imgExtensions = [
+    '.jpg', '.jpeg', '.png', '.svg'
+]
+
+export const signingPages = [
+    '/sign-in', '/sign-up'
+]
+
 export const WebSiteName = 'HSE SEMS'
-export const session_url = 'http://localhost:8000'
+export const API_URL = 'http://localhost:8000'
+export const WEBSITE_URL = 'http://localhost:3000'

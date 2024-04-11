@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import * as z from "zod";
-import { session_url } from '@/constants'
+import { API_URL } from '@/constants'
 import { EventSchema } from '../../../../schemas'
 import Link from 'next/link';
 
@@ -11,7 +11,7 @@ const Activities = () => {
   const [activities, setActivities] = useState<any>();
 
   useEffect(() => {
-    axios.get(session_url + '/events')
+    axios.get(API_URL + '/events')
     .then((response) => {
       setActivities(response.data);
     })
@@ -20,14 +20,11 @@ const Activities = () => {
     })
   }, [])
 
-  if (!activities)
-    return;
-
   return (
     <div className='flex flex-col gap-y-3'>
       <section className='flex size-full flex-col gap-5
       bg-light-3 p-6 rounded-[14px]'>
-        {activities.map((activity: z.infer<typeof EventSchema>) => {
+        {activities && activities?.map((activity: z.infer<typeof EventSchema>) => {
           const db_time = new Date(activity.starting_time)
           const activity_id = activity.id
 
@@ -56,7 +53,6 @@ const Activities = () => {
       <div id='current'></div>
       <div id='previous'></div>
     </div>
-
   )
 }
 

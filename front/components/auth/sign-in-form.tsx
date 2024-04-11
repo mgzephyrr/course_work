@@ -14,7 +14,7 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { FormError } from "../form-error"
 import { useState } from "react"
-import { session_url } from "@/constants"
+import { API_URL } from "@/constants"
 
 export const SignInForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -31,8 +31,8 @@ export const SignInForm = () => {
     const onSubmit = () => {
         setError("");
         const formValues = document.getElementById("loginForm") as HTMLFormElement;
-
-        axios.post(session_url + "/auth/login", new FormData(formValues))
+        axios.defaults.withCredentials = true;
+        axios.post(API_URL + "/auth/login", new FormData(formValues))
         .then((data) => {
             console.log('Authenticated');
             console.log(data);
