@@ -1,4 +1,5 @@
 "use client"
+
 import * as z from "zod"
 import axios from "axios"
 
@@ -34,6 +35,7 @@ export const SignInForm = () => {
         axios.post(session_url + "/auth/login", new FormData(formValues))
         .then((data) => {
             console.log('Authenticated');
+            console.log(data);
             setError("");
             router.push('/')
         })

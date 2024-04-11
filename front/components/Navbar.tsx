@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import MobileNav from './MobileNav'
 import { WebSiteName } from '@/constants'
+import { Profile } from './profile'
 
 const Navbar = () => {
   return (
@@ -20,9 +21,8 @@ const Navbar = () => {
       </Link>
 
       <div className='flex-between gap-5'>
-        {/* user management */}
-
         <MobileNav/>
+        <Profile/>
       </div>
     </nav>
   )
