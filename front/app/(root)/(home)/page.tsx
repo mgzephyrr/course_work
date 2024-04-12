@@ -22,7 +22,7 @@ const Home = () => {
 
   useEffect(() => {
     axios.get(API_URL + '/events/upcoming')
-    .then((response) => {setActivity(response.data)})
+    .then((response) => { setActivity(response.data); console.log(response) })
     .catch((error) => {console.log(error)})
   }, [])
 
@@ -38,7 +38,7 @@ const Home = () => {
 
   return (
     <section className='flex size-full flex-col gap-5
-    bg-light-3 p-6 rounded-[14px]'>
+    bg-light-3 p-6 rounded-[14px] border border-gray-300 shadow'>
       <h1 className='text-blue-3 text-2xl font-extrabold lg:text-4xl'>Ближайшее мероприятие</h1>
         {
           !activity?.event_description &&
@@ -46,7 +46,7 @@ const Home = () => {
         }
         {
           activity?.event_description &&
-          <div className="flex flex-row items-center gap-x-3 text-black">
+          <div className="flex flex-row items-center gap-x-3 text-black pt-[6px]">
             <InfoIcon className="h-8 w-8 min-w-6"/>
             <h2 className='font-bold text-base lg:text-lg'>{activity?.event_description}</h2>
           </div>

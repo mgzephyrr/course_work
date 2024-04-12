@@ -13,10 +13,19 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -35,6 +44,72 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import { Separator } from "@/components/ui/separator"
+import { GetCurrentUser } from "@/components/profile"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+
+export function TabsDemo() {
+  return (
+    <Tabs defaultValue="avatar" className="w-full">
+      <TabsList className="grid w-full grid-cols-2 gap-x-0.5">
+        <TabsTrigger className='data-[state=active]:text-white
+                                  data-[state=active]:shadow-sm
+                                  data-[state=active]:bg-neutral-800'
+                     value="avatar">Аватар</TabsTrigger>
+        <TabsTrigger className='data-[state=active]:text-white
+                                  data-[state=active]:shadow-sm
+                                  data-[state=active]:bg-neutral-800'
+                     value="password">Посещенные мероприятия</TabsTrigger>
+      </TabsList>
+      <TabsContent value="avatar">
+        <Card>
+          <CardHeader>
+            <CardTitle>Аватар</CardTitle>
+            <CardDescription>
+              Здесь вы можете изменить аватар.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="space-y-1">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" defaultValue="Pedro Duarte" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="username">Username</Label>
+              <Input id="username" defaultValue="@peduarte" />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button>Сохранить аватар</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value="password">
+        <Card>
+          <CardHeader>
+            <CardTitle>Password</CardTitle>
+            <CardDescription>
+              Change your password here. After saving, you'll be logged out.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <DataTableDemo/>
+          </CardContent>
+          <CardFooter>
+            <Button>Save password</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  )
+}
 
 const data: Payment[] = [
   {
@@ -384,10 +459,41 @@ export function DataTableDemo() {
 }
 
 const ProfilePage = () => {
+  const user = GetCurrentUser();
+
   return (
-    <div className="overflow-y-hidden">
-        <DataTableDemo/>
-    </div>
+    <section className='flex size-full flex-col gap-5
+        bg-light-3 p-6 rounded-[14px] border shadow-sm'>
+      <div className="flex flex-row gap-x-5 items-center">
+        <Avatar className={`max-sm:h-[60px] max-sm:w-[60px] h-[90px] w-[90px] lg:h-[120px] lg:w-[120px] border-4 border-gray-300`}>
+            {
+                !user && <Skeleton className={`max-sm:h-[60px] max-sm:w-[60px] md:h-[90px] md:w-[90px] lg:h-[120px] lg:w-[120px] rounded-full`}/>
+            }
+            {
+                user?.avatar_filename &&
+                <AvatarImage src={`images/${user?.avatar_filename}`}/>
+            }
+            {
+                user && !user?.avatar_filename &&
+                <AvatarFallback className="max-sm:text-xl text-2xl lg:text-4xl">
+                    {(user?.first_name.slice(0, 1)! + user?.last_name.slice(0, 1)!)}
+                </AvatarFallback>
+            }
+        </Avatar>
+        {
+          user &&
+          <div className="flex flex-col gap-y-1">
+            <h1 className="max-sm:text-xl text-2xl lg:text-3xl font-semibold">{user?.last_name + ' ' +
+                                                    user?.first_name + ' ' +
+                                                    user?.paternity}</h1>
+            <h2 className="text-muted-foreground max-sm:text-xs">{user?.email}</h2>
+          </div>
+        }
+
+      </div>
+      <Separator className="bg-gray-300"/>
+      <TabsDemo/>
+    </section>
   )
 }
 
