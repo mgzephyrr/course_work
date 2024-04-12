@@ -1,5 +1,6 @@
 from datetime import timedelta
 import re
+from typing import List
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Response, Cookie
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import JWTException
@@ -9,6 +10,7 @@ import uuid
 from PIL import Image
 from fastapi.responses import FileResponse
 
+from back.Event.schemas import SEvent
 from back.User.depnds import get_current_user
 from back.Token.schemas import Token
 from back.User.models import User
@@ -99,3 +101,8 @@ async def load_user_avatar_by_id(user_id: int) -> FileResponse:
         raise HTTPException(status_code=404, detail="File not found")
 
     return FileResponse(file_path)
+
+@router.get("/signedevents")
+async def get_events_for_user(user: SUser = Depends(get_current_user)) -> List[SEvent]:
+    return await crud.get_events_for_user(user_id=user.id)
+
