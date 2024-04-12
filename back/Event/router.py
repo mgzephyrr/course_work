@@ -7,7 +7,11 @@ from datetime import datetime
 
 from back.Event.schemas import SEvent, SEventCreate
 from back.EventParticipant.schemas import SEventParticipant, SEventParticipantCreate
+from back.EventOrganizer.schemas import SEventOrganizer
 from back import crud
+from back.User.depnds import get_current_user
+from back.User.models import User
+from back.User.schemas import SUser
 from back.database import async_session_maker
 from back.images_upload.repo import upload_image
 from back.config import settings
@@ -53,6 +57,10 @@ async def get_event_participants(event_id: int) -> List[SEventParticipant]:
 @router.post("/{event_id}/{user_id}")
 async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate) -> SEventParticipant:
     return await crud.create_event_participant(event_id = event_id, user_id = user_id, event_participant = event_participant)
+
+# @router.post("/{event_id}/organizer")
+# async def create_event_organizer(event_id:int, user: SUser = Depends(get_current_user)) -> SEventOrganizer:
+    
 
 @router.post("{event_id}/addimage")
 async def add_event_image(event_id: int,file: UploadFile = File(...)):

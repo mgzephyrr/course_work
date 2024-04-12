@@ -122,6 +122,12 @@ async def create_event(event: SEventCreate, file_name: str):
         await session.commit()
         await session.refresh(db_event)
         return db_event
+    
+async def get_events_for_user(user_id: int) -> list[Event]:
+    async with async_session_maker() as session:
+        query = select(Event).join(EventParticipant).where(EventParticipant.user_id == user_id)
+        result = await session.execute(query)
+        return result.scalars().all()
 
 async def get_all_events() -> list[Event]:
     async with async_session_maker() as session:
