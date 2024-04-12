@@ -38,3 +38,11 @@ export const EventSchema = z.object({
     eventparticipants: z.number(),
     organizers: z.string()
 })
+
+export const UserSchema = z.object({
+    email: z.string(),
+    first_name: z.string(),
+    last_name: z.string(),
+    paternity: z.string(),
+    avatar_filename: z.string()
+})

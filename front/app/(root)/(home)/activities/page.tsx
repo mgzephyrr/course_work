@@ -20,6 +20,13 @@ const Activities = () => {
     })
   }, [])
 
+  const getBg = (image_filename: string) => {
+    if (image_filename){
+      return `bg-[url('/images/${image_filename}')]`
+    }
+    return "bg-hero"
+  }
+
   return (
     <div className='flex flex-col gap-y-3'>
       <section className='flex size-full flex-col gap-5
@@ -28,13 +35,15 @@ const Activities = () => {
           const db_time = new Date(activity.starting_time)
           const activity_id = activity.id
 
-          const time = db_time.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); // должна быть дата и время мероприятия
-          const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(db_time);   // должна быть дата и время мероприятия
+          const time = db_time.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+          const date = (new Intl.DateTimeFormat('ru-RU', { dateStyle: 'full' })).format(db_time);
 
           return (
             <Link href={"../activity/" + activity_id}
                   key={activity.id}
-                  className='h-[300px] w-full rounded-[20px] bg-hero bg-cover bg-zinc-500 bg-blend-multiply cursor-pointer'>
+                  className={`h-[300px] w-full rounded-[20px] bg-cover ${getBg(activity.image_file_name)}
+                  bg-zinc-500 bg-blend-multiply cursor-pointer bg-center`}
+                  >
               <div className='flex h-full flex-col justify-between max-md:px-5 max-md:py-8 p-6 lg:p-11'>
                 <h2 className='max-w-[600px] rounded py-2 font-normal text-white'>
                   {activity.event_name}

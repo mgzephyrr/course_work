@@ -1,15 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import { WEBSITE_URL, imgExtensions, signingPages, API_URL } from "@/constants"
+import { WEBSITE_URL, signingPages, imgExtensions } from "@/constants"
 
-export async function fetchUserData() {
-  let isAuthorized = false;
-  const resp = await fetch(API_URL + '/auth/me')
-  console.log(resp.status)
-  return resp.status === 200;
-}
-
-export default async function middleware(req: NextRequest){
-  const isAuthorized = await fetchUserData();
+export default function middleware(req: NextRequest){
+  const isAuthorized = req.cookies.get("Authorization");
   const url = req.url
 
   if(imgExtensions.some(elem => url.includes(elem))){
@@ -19,8 +12,6 @@ export default async function middleware(req: NextRequest){
   if(!isAuthorized && !signingPages.some(link => url.includes(link))){
     return NextResponse.redirect(WEBSITE_URL + '/sign-in')
   }
-
-  //console.log(isAuthorized)
 
   if (isAuthorized && signingPages.some(link => url.includes(link))){
     return NextResponse.redirect(WEBSITE_URL)

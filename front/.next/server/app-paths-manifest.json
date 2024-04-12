@@ -1,15 +1,9 @@
 {
-<<<<<<< HEAD
-  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js"
-=======
+  "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
+  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
+  "/(root)/profile/page": "app/(root)/profile/page.js",
+  "/(root)/(home)/feedback/page": "app/(root)/(home)/feedback/page.js",
   "/(root)/(home)/page": "app/(root)/(home)/page.js",
-<<<<<<< HEAD
-  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
-  "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
-=======
-  "/(root)/(home)/activities/page": "app/(root)/(home)/activities/page.js",
-  "/(auth)/sign-in/page": "app/(auth)/sign-in/page.js",
->>>>>>> 1aa1a3fd57dd8747eed19eec8087fb91b74e0df9
-  "/(root)/(home)/organisations/page": "app/(root)/(home)/organisations/page.js"
->>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
+  "/(root)/(home)/organisations/page": "app/(root)/(home)/organisations/page.js",
+  "/(auth)/sign-up/page": "app/(auth)/sign-up/page.js"
 }

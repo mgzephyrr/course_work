@@ -8,17 +8,13 @@ from back.config import settings
 
 
 def get_token(request: Request):
+    print(request)
     token = request.cookies.get("Authorization")
     if not token:
         raise HTTPException(status_code=401, detail="Token absent")
     return token
 
 async def get_current_user(token: str = Depends(get_token)):
-    print(token)
-<<<<<<< HEAD
-    print('111111111111111')
-=======
->>>>>>> 941126ab4916fe34cbab3d92ada2d3a37e9e9279
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, settings.ALGORITHM
