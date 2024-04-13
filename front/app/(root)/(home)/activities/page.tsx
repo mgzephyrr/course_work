@@ -22,9 +22,9 @@ const Activities = () => {
 
   const getBg = (image_filename: string) => {
     if (image_filename){
-      return `bg-[url('/images/${image_filename}')]`
+      return `url(/images/${image_filename})`
     }
-    return "bg-hero"
+    return `url(/images/hero-background.jpg)`
   }
 
   return (
@@ -41,10 +41,11 @@ const Activities = () => {
           return (
             <Link href={"../activity/" + activity_id}
                   key={activity.id}
-                  className={`h-[300px] w-full rounded-[20px] bg-cover ${getBg(activity.image_file_name)}
-                  bg-zinc-500 bg-blend-multiply cursor-pointer bg-center`}
-                  >
-              <div className='flex h-full flex-col justify-between max-md:px-5 max-md:py-8 p-6 lg:p-11'>
+                  className={`h-[300px] w-full rounded-[20px]`}
+                >
+              <div className="flex h-full flex-col justify-between max-md:px-5 max-md:py-8 p-6 lg:p-11
+                    bg-cover bg-zinc-500 bg-blend-multiply cursor-pointer bg-center rounded-[20px]"
+                    style={{backgroundImage: getBg(activity.image_file_name)}}>
                 <h2 className='max-w-[600px] rounded py-2 font-normal text-white'>
                   {activity.event_name}
                 </h2>

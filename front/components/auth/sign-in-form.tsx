@@ -34,8 +34,8 @@ export const SignInForm = () => {
         axios.defaults.withCredentials = true;
         axios.post(API_URL + "/auth/login", new FormData(formValues))
         .then((data) => {
-            console.log('Authenticated');
-            console.log(data);
+            //console.log('Authenticated');
+            //console.log(data);
             setError("");
             router.push('/')
         })
@@ -44,11 +44,11 @@ export const SignInForm = () => {
                 throw '';
             }
             setError("Неверный логин или пароль");
-            console.log('No such user');
+            //console.log('No such user');
         })
         .catch((e) => {
             setError("Произошла непредвиденная ошибка");
-            console.log('Unlucky');
+            //console.log('Unlucky');
             console.log(e)
         })
     }

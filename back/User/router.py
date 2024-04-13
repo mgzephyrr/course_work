@@ -106,3 +106,19 @@ async def load_user_avatar_by_id(user_id: int) -> FileResponse:
 async def get_events_for_user(user: SUser = Depends(get_current_user)) -> List[SEvent]:
     return await crud.get_events_for_user(user_id=user.id)
 
+@router.get("/mebytoken")
+async def get_user_by_token_directly(token):
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, settings.ALGORITHM
+        )
+        user = await crud.get_user_by_email(email=payload.get("sub"))
+        if user is None:
+            raise HTTPException(status_code=401, detail="Invalid user")
+        return user
+    except JWTException:
+        raise HTTPException(status_code=401, detail="Could not validate credentials")
+
+@router.get("/signedeventsbytoken")
+async def get_events_for_user(user: SUser = Depends(get_user_by_token_directly)) -> List[SEvent]:
+    return await crud.get_events_for_user(user_id=user.id)
