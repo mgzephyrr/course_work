@@ -26,14 +26,14 @@ async def get_upcoming_event() -> SEvent:
     return await crud.get_upcoming_event_from_db()
 
 @router.post("/create")
-async def create_event(event_name: str, 
-                       event_description: str, 
-                       starting_time: datetime, 
+async def create_event(event_name: str,
+                       event_description: str,
+                       starting_time: datetime,
                        ending_time: datetime, location: str,
                        participants_count: int,
                        admin_comment: str = None,
                        file: UploadFile = File(...)) -> SEvent:
-    
+
     event = SEventCreate(event_name = event_name,
                          event_description = event_description,
                          starting_time = starting_time,
@@ -42,7 +42,7 @@ async def create_event(event_name: str,
                          participants_count = participants_count,
                          admin_comment=admin_comment
                          )
-    
+
     newFile = await upload_image(file)
     return await crud.create_event(event=event, file_name=newFile.filename)
 
@@ -51,6 +51,10 @@ async def get_all_events() -> List[SEvent]:
     return await crud.get_all_events()
 
 @router.get("/{event_id}")
+async def get_event_info(event_id: int) -> SEvent:
+    return await crud.get_event_info_by_id(event_id=event_id)
+
+@router.get("/{event_id}/participants")
 async def get_event_participants(event_id: int) -> List[SEventParticipant]:
     return await crud.get_event_participants_by_event_id(event_id = event_id)
 
@@ -60,7 +64,7 @@ async def create_event_participant(event_id: int, user_id: int, event_participan
 
 # @router.post("/{event_id}/organizer")
 # async def create_event_organizer(event_id:int, user: SUser = Depends(get_current_user)) -> SEventOrganizer:
-    
+
 
 @router.post("{event_id}/addimage")
 async def add_event_image(event_id: int,file: UploadFile = File(...)):
@@ -73,5 +77,5 @@ async def load_event_image_by_id(event_id: int) -> FileResponse:
     file_path = f"{settings.IMAGEDIR}{file_name}"
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
-    
+
     return FileResponse(file_path)

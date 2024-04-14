@@ -8,7 +8,6 @@ from back.config import settings
 
 
 def get_token(request: Request):
-    print(request)
     token = request.cookies.get("Authorization")
     if not token:
         raise HTTPException(status_code=401, detail="Token absent")

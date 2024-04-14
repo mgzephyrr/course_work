@@ -1,10 +1,10 @@
 import { API_URL } from "@/constants"
-import { EventSchema } from "@/schemas";
+import { EventSchema, UserSchema } from "@/schemas";
 import axios from "axios"
 import { cookies } from "next/headers";
 import * as z from "zod";
 
-export async function getUser(){
+export async function getUser(): Promise<z.infer<typeof UserSchema> | undefined>{
     const cookie = cookies().get("Authorization")
     axios.defaults.withCredentials = true;
     try{
@@ -19,7 +19,7 @@ export async function getUser(){
             last_name: data.data['last_name'],
             paternity: data.data['paternity'],
             avatar_filename: data.data['avatar_file_name'],
-        }
+        } as z.infer<typeof UserSchema>
         return user
     }
     catch(e) {

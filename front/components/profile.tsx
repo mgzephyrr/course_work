@@ -62,7 +62,7 @@ export function Profile() {
                         }
                         {
                             user?.avatar_filename &&
-                            <AvatarImage src={`images/${user?.avatar_filename}`}/>
+                            <AvatarImage src={`/images/${user?.avatar_filename}`}/>
                         }
                         {
                             user && !user?.avatar_filename &&

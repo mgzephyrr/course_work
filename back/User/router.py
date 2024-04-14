@@ -78,7 +78,7 @@ async def protected_route(user: User = Depends(get_current_user)):
 
 
 @router.post("/createavatar")
-async def create_upload_file(file: UploadFile = File(...), user: SUser = Depends(get_current_user)):
+async def create_upload_file(file: UploadFile = File, user: SUser = Depends(get_current_user)):
     newFile = await upload_image(file)
     return await crud.add_avatar_to_current_user(file_name=newFile.filename, user_id=user.id)
 

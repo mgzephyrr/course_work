@@ -8,6 +8,7 @@ import { EventSchema } from '@/schemas';
 import { useEffect, useState } from 'react'
 import { MapPinIcon, InfoIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 const Home = () => {
   const now = new Date()
@@ -22,7 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     axios.get(API_URL + '/events/upcoming')
-    .then((response) => { setActivity(response.data); console.log(response) })
+    .then((response) => { setActivity(response.data); })
     .catch((error) => {console.log(error)})
   }, [])
 
@@ -55,8 +56,9 @@ const Home = () => {
       {!activity && <Skeleton className="h-[300px] w-full rounded-[20px]"/>}
       {
         activity &&
-        <div className={`h-[300px] w-full rounded-[20px] ${getBg(activity?.image_file_name)}
-                       bg-cover bg-center bg-zinc-500 bg-blend-multiply text-white`}>
+        <Link href= {"../activity/" + activity.id}
+              className={`h-[300px] w-full rounded-[20px] ${getBg(activity?.image_file_name)}
+                       bg-cover bg-center bg-zinc-500 bg-blend-multiply text-white cursor-pointer`}>
           <div className='flex h-full flex-col justify-between max-md:px-5 max-md:py-8 p-6 lg:p-11 '>
             <h2 className='max-w-[600px] rounded py-2 font-normal'>{activity?.event_name}</h2>
 
@@ -65,7 +67,7 @@ const Home = () => {
               { activity && <p className='text-lg font-medium lg:text-2xl text-sky-1'>{date}</p> }
             </div>
           </div>
-        </div>
+        </Link >
       }
 
       {

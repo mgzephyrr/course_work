@@ -31,6 +31,21 @@
       "static/chunks/main-app.js",
       "static/css/app/(auth)/sign-in/page.css",
       "static/chunks/app/(auth)/sign-in/page.js"
+    ],
+    "/(root)/(home)/activities/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/activities/page.js"
+    ],
+    "/(root)/activity/[id]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/activity/[id]/page.js"
+    ],
+    "/(root)/(home)/organisations/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/organisations/page.js"
     ]
   }
 }

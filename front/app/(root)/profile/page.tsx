@@ -1,9 +1,9 @@
 import * as React from "react"
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -18,16 +18,11 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getUser } from "@/app/utils"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import ParticipationTable from "@/components/participation-table/participation-table"
 import AvatarUploader from "@/components/avatar-uploader"
 
-export function TabsShower({
-    avatar_filename
-} : {
-    avatar_filename: string
-}) {
+export function TabsShower() {
   return (
     <Tabs defaultValue="avatar" className="w-full">
       <TabsList className="grid w-full grid-cols-3 gap-x-0.5 max-md:h-12 ">
@@ -62,11 +57,8 @@ export function TabsShower({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <AvatarUploader avatar_filename={avatar_filename}/>
+            <AvatarUploader/>
           </CardContent>
-          <CardFooter>
-            <Button className="bg-blue-2 hover:bg-blue-500">Сохранить аватар</Button>
-          </CardFooter>
         </Card>
       </TabsContent>
       <TabsContent value="password">
@@ -133,7 +125,7 @@ export default async function ProfilePage() {
 
       </div>
       <Separator className="bg-gray-300"/>
-      <TabsShower avatar_filename={user ? user.avatar_filename : ''}/>
+      <TabsShower />
     </section>
   )
 }
