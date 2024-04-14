@@ -16,8 +16,6 @@ export default function middleware(req: NextRequest){
   if (isAuthorized && signingPages.some(link => url.includes(link))){
     return NextResponse.redirect(WEBSITE_URL)
   }
-
-  // добавить логику (бан чужих профилей, неаппрувнутых мероприятий)
 }
 
 export const config = {

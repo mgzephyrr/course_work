@@ -22,8 +22,7 @@ import { UserSchema } from "@/schemas";
 import { Skeleton } from "./ui/skeleton";
 import Link from "next/link";
 
-export function Profile() {
-    const router = useRouter();
+export function GetCurrentUser(){
     const [user, setUser] = useState<z.infer<typeof UserSchema>>();
 
     axios.defaults.withCredentials = true;
@@ -43,6 +42,13 @@ export function Profile() {
         })
     }, [])
 
+    return user
+}
+
+export function Profile() {
+    const router = useRouter();
+    const user = GetCurrentUser();
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -56,15 +62,14 @@ export function Profile() {
                         }
                         {
                             user?.avatar_filename &&
-                            <AvatarImage src={`images/${user?.avatar_filename}`}/>
+                            <AvatarImage src={`/images/${user?.avatar_filename}`}/>
                         }
                         {
                             user && !user?.avatar_filename &&
                             <AvatarFallback>
-                                {(user?.first_name.slice(0, 1)! + user?.first_name.slice(0, 1)!)}
+                                {(user?.first_name.slice(0, 1)! + user?.last_name.slice(0, 1)!)}
                             </AvatarFallback>
                         }
-
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>

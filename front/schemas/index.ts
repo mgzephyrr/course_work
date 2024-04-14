@@ -35,7 +35,7 @@ export const EventSchema = z.object({
     participants_count: z.number(),
     admin_comment: z.string(),
     image_file_name: z.string(),
-    eventparticipants: z.number(),
+    isModerated: z.boolean(),
     organizers: z.string()
 })
 

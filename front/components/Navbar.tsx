@@ -8,7 +8,7 @@ import { Profile } from './profile'
 
 const Navbar = () => {
   return (
-    <nav className='flex-between fixed z-50 w-full bg-light-2 px-6 py-4 lg:px-10'>
+    <nav className='flex-between fixed z-50 w-full bg-light-2 px-6 py-4 lg:px-10 shadow'>
       <Link href='/' className='flex items-center gap-1'>
         <Image
           src='/icons/logo.svg'

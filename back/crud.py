@@ -61,7 +61,7 @@ async def add_avatar_to_current_user(file_name: str, user_id: int):
         await session.commit()
         await session.refresh(user)
         return file_name
-        
+
 
 async def get_user(user_id: int):
     async with async_session_maker() as session:
@@ -122,7 +122,13 @@ async def create_event(event: SEventCreate, file_name: str):
         await session.commit()
         await session.refresh(db_event)
         return db_event
-    
+
+async def get_event_info_by_id(event_id: int) -> Event:
+    async with async_session_maker() as session:
+        query = select(Event).filter(Event.id == event_id)
+        result = await session.execute(query)
+        return result.scalar_one_or_none()
+
 async def get_events_for_user(user_id: int) -> list[Event]:
     async with async_session_maker() as session:
         query = select(Event).join(EventParticipant).where(EventParticipant.user_id == user_id)
@@ -146,19 +152,19 @@ async def get_upcoming_event_from_db() -> Event:
             query = select(Event).filter(Event.starting_time > current_time).order_by(Event.starting_time)
             result = await session.execute(query)
             return result.scalars().first()
-    
+
 async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate):
     async with async_session_maker() as session:
-        db_event_participant = EventParticipant(event_id = event_id, 
-                                                user_id = user_id, 
-                                                event_rewiew = event_participant.event_rewiew, 
-                                                event_rating = event_participant.event_rating, 
+        db_event_participant = EventParticipant(event_id = event_id,
+                                                user_id = user_id,
+                                                event_rewiew = event_participant.event_rewiew,
+                                                event_rating = event_participant.event_rating,
                                                 organizer_comment = event_participant.organizer_comment)
         session.add(db_event_participant)
         await session.commit()
         await session.refresh(db_event_participant)
         return db_event_participant
-    
+
 async def create_student_org(student_org: SStudentOrganizationCreate, file_name:str):
     async with async_session_maker() as session:
         db_student_org = StudentOrganization(stud_org_name = student_org.stud_org_name,
