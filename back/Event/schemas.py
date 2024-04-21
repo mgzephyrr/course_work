@@ -8,7 +8,7 @@ class SEventBase(BaseModel):
     ending_time: datetime
     location: str
     participants_count: int
-    
+
     class Config:
         orm_mode = True
 
@@ -19,6 +19,7 @@ class SEventCreate(SEventBase):
 class SEvent(SEventBase):
     id: int
     image_file_name: str | None = None
+    isModerated: bool
 
     class Config:
         orm_mode = True

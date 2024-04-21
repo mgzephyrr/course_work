@@ -13,6 +13,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import * as z from "zod"
 import { FormSuccess } from './form-success';
 import { Textarea } from './ui/textarea';
+import { headers } from 'next/headers';
 
 const NewActivityForm = () => {
     const [file, setFile] = useState<File>();
@@ -72,29 +73,9 @@ const NewActivityForm = () => {
             return;
         }
 
-        // const values = JSON.stringify({
-        //     event_name: event_name,
-        //     event_description: event_desc,
-        //     starting_time: start_datetime,
-        //     ending_time: end_datetime,
-        //     location: event_location,
-        //     participants_count: 0,
-        //     admin_comment: '',
-        //     file: file
-        // })
-
-        // const formData:any = new FormData();
-
-        // formData.append('event_name', event_name)
-        // formData.append('event_description', event_desc)
-        // formData.append('starting_time', start_datetime)
-        // formData.append('ending_time', end_datetime)
-        // formData.append('location', event_location)
-        // formData.append('participants_count', 0)
-        // formData.append('admin_comment', '')
-        // formData.append('file', file)
-
-        axios.post(API_URL + "/events/create", {
+        axios.request({
+            method: 'POST',
+            url: API_URL + "/events/create",
             params:{
                 event_name: event_name,
                 event_description: event_desc,
@@ -102,9 +83,14 @@ const NewActivityForm = () => {
                 ending_time: end_datetime,
                 location: event_location,
                 participants_count: 0,
-                admin_comment: '',
+                admin_comment: ''
+            },
+            data:{
                 file: file
-            }
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
         })
         .then((resp) => { console.log(resp) })
         .catch((e) => { console.log(e) } )

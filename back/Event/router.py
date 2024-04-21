@@ -33,7 +33,8 @@ async def create_event(event_name: str,
                        location: str,
                        participants_count: int,
                        admin_comment: str = None,
-                       file: UploadFile = File) -> SEvent:
+                       file: UploadFile = None
+                       ) -> SEvent:
 
     event = SEventCreate(event_name = event_name,
                          event_description = event_description,

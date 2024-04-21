@@ -40,6 +40,14 @@ const config = {
         moss: {
           1: '#415111'
         },
+        redbutton: {
+          1: '#A00924',
+          2: '#D8173A'
+        },
+        greenbutton: {
+          1: '#006E2C',
+          2: '#07B54C'
+        },
         test: '#C4DDFF',
         primary: {
           DEFAULT: "hsl(var(--primary))",

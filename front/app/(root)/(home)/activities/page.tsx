@@ -4,22 +4,29 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import * as z from "zod";
 import { API_URL } from '@/constants'
-import { EventSchema } from '../../../../schemas'
+import { EventSchema, UserSchema } from '../../../../schemas'
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { PlusCircleIcon } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Activities = () => {
   const [activities, setActivities] = useState<any>();
+  const [userRole, setUserRole] = useState<number | undefined>(undefined);
 
   useEffect(() => {
+    axios.defaults.withCredentials = true;
+
     axios.get(API_URL + '/events')
     .then((response) => {
       setActivities(response.data);
     })
     .catch((error) => {
       console.log('Unexpected error:', error)
+    })
+
+    axios.get(API_URL + '/auth/me')
+    .then((response) => {
+      setUserRole(response.data['system_role_id'])
     })
   }, [])
 
@@ -32,15 +39,22 @@ const Activities = () => {
 
   return (
     <div className='flex flex-col gap-y-3'>
-      <Link className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
-        href="../new_activity"
-      >
-        <PlusCircleIcon className='text-white' />
-        <h1 className='text-white font-semibold text-[18px]'>Новое мероприятие</h1>
-      </Link>
 
       <section className='flex size-full flex-col gap-5
       bg-light-3 p-6 rounded-[14px]'>
+        {
+          !userRole &&
+          <Skeleton className='w-full h-12'/>
+        }
+        {
+          userRole && userRole !== 3 &&
+          <Link className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
+            href="../new_activity"
+          >
+            <PlusCircleIcon className='text-white' />
+            <h1 className='text-white font-semibold text-[18px] max-sm:text-[14px]'>Новое мероприятие</h1>
+          </Link>
+        }
         {activities && activities?.map((activity: z.infer<typeof EventSchema>) => {
           const db_time = new Date(activity.starting_time)
           const activity_id = activity.id
