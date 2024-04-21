@@ -334,3 +334,9 @@ async def find_token_by_value(token_value: str) -> MagicLink:
         result = await session.execute(query)
         token = result.scalars().first()
         return token
+    
+async def is_user_registered_for_event(event_id: int, user_id: int) -> bool:
+    async with async_session_maker() as session:
+        query = select(EventParticipant).where(EventParticipant.event_id == event_id).where(EventParticipant.user_id == user_id)
+        result = await session.execute(query)
+        return result.scalar_one_or_none() is not None

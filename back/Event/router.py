@@ -85,11 +85,18 @@ async def get_event_participants(event_id: int) -> List[SUser]:
 
 @router.post("/{event_id}/sign")
 async def create_event_participant(event_id: int, event_participant: SEventParticipantCreate, user: User = Depends(get_current_user)) -> SEventParticipant:
-    return await crud.create_event_participant(event_id = event_id, user_id = user.id, event_participant = event_participant)
+    if await crud.is_user_registered_for_event(event_id, user.id):
+        raise HTTPException(status_code=400, detail="User is already registered for this event")
+    else:
+        return await crud.create_event_participant(event_id = event_id, user_id = user.id, event_participant = event_participant)
 
 # @router.post("/{event_id}/organizer")
 # async def create_event_organizer(event_id:int, user: SUser = Depends(get_current_user)) -> SEventOrganizer:
 
+@router.get("/{event_id}/is_sign")
+async def check_event_registration(event_id: int, user: User = Depends(get_current_user)):
+    registration_status = await crud.is_user_registered_for_event(event_id=event_id, user_id=user.id)
+    return registration_status
 
 @router.post("{event_id}/addimage")
 async def add_event_image(event_id: int, file: UploadFile = File(...)):
@@ -122,3 +129,4 @@ async def delete_event(event_id: int):
 @router.get("/event_organizer/{event_id}")
 async def get_event_organizer(event_id: int):
     return await crud.get_event_organizer_details(event_id)
+
