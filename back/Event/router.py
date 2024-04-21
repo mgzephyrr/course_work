@@ -37,6 +37,9 @@ async def create_event(event_name: str,
                        isOnlyStudent: bool = True
                        ) -> SEvent:
 
+    if not file:
+        raise HTTPException(status_code=404, detail="No avatar uploaded")
+
     event = SEventCreate(event_name = event_name,
                          event_description = event_description,
                          starting_time = starting_time,

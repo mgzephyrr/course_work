@@ -96,8 +96,5 @@ export const CreateEventSchema = z.object({
     }).max(50, {
         message: "Место проведения мероприятия не может содержать более 50 символов"
     }),
-    avatar: z.any(),
-    // avatar: z.instanceof(FileList, {
-    //     message: "Необходима заставка мероприятия"
-    // })
+    avatar: z.any()
 })
