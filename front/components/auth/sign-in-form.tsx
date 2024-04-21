@@ -32,6 +32,9 @@ export const SignInForm = () => {
         setError("");
         const formValues = document.getElementById("loginForm") as HTMLFormElement;
         axios.defaults.withCredentials = true;
+
+        console.log(new FormData(formValues))
+
         axios.post(API_URL + "/auth/login", new FormData(formValues))
         .then((data) => {
             //console.log('Authenticated');

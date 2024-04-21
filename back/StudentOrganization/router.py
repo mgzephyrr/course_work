@@ -28,13 +28,17 @@ async def create_stud_org(student_org_name: str, stud_org_description: str, vk_l
 async def get_all_student_org() -> List[SStudentOrganization]:
     return await crud.get_all_student_org()
 
+@router.get("/{stud_org_id}")
+async def get_event_info(stud_org_id: int) -> SStudentOrganization:
+    return await crud.get_stud_org_info_by_id(stud_org_id=stud_org_id)
+
 @router.get("{stud_org_id}/avatar")
 async def load_user_avatar_by_id(stud_org_id: int) -> FileResponse:
     file_name = await crud.load_student_org_avatar(stud_org_id=stud_org_id)
     file_path = f"{settings.IMAGEDIR}{file_name}"
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
-    
+
     return FileResponse(file_path)
 
 @router.post("/{stud_org_id}/createavatar")
@@ -48,5 +52,5 @@ async def load_stud_org_avatar_by_id(stud_org_id: int) -> FileResponse:
     file_path = f"{settings.IMAGEDIR}{file_name}"
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
-    
+
     return FileResponse(file_path)

@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Button } from './ui/button';
 import { FormError } from './form-error';
 import { FormSuccess } from './form-success';
+import { Input } from './ui/input';
 
 
 const AvatarUploader = () => {
@@ -47,15 +48,21 @@ const AvatarUploader = () => {
   return (
     <div className='flex flex-col'>
       <form onSubmit={onSubmit}
-      className='flex items-center flex-col gap-y-6'>
-        <div className='flex items-center'>
-          <input
+      className='flex flex-col gap-y-6'>
+        <div className='flex max-md:items-center max-md:flex-col max-md:gap-y-5 gap-x-5'>
+          <Input
+            type='file'
+            name='file'
+            onChange={(e) => setFile(e.target.files?.[0])}
+          />
+          {/* <input
+            className='max-sm:w-[200px] whitespace-normal'
             type='file'
             name='file'
             onChange={(e) => setFile(e.target.files?.[0])}>
-          </input>
+          </input> */}
           <Button type='submit'
-                  className="bg-blue-2 hover:bg-blue-500 w-1/2
+                  className="bg-blue-2 hover:bg-blue-500 max-md:w-full w-1/2
                   whitespace-normal"
                   value='Upload'>Сохранить аватар</Button>
         </div>

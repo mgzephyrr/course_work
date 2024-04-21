@@ -6,6 +6,9 @@ import * as z from "zod";
 import { API_URL } from '@/constants'
 import { EventSchema } from '../../../../schemas'
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { PlusCircleIcon } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 const Activities = () => {
   const [activities, setActivities] = useState<any>();
@@ -29,6 +32,13 @@ const Activities = () => {
 
   return (
     <div className='flex flex-col gap-y-3'>
+      <Link className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
+        href="../new_activity"
+      >
+        <PlusCircleIcon className='text-white' />
+        <h1 className='text-white font-semibold text-[18px]'>Новое мероприятие</h1>
+      </Link>
+
       <section className='flex size-full flex-col gap-5
       bg-light-3 p-6 rounded-[14px]'>
         {activities && activities?.map((activity: z.infer<typeof EventSchema>) => {
@@ -59,9 +69,6 @@ const Activities = () => {
           )
         })}
       </section>
-      <div id='upcoming' className=''></div>
-      <div id='current'></div>
-      <div id='previous'></div>
     </div>
   )
 }
