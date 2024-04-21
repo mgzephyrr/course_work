@@ -15,12 +15,14 @@ class SEventBase(BaseModel):
 class SEventCreate(SEventBase):
     admin_comment: str | None = None
     isModerated: bool = False
+    isOnlyStudent: bool = False
     pass
 
 class SEvent(SEventBase):
     id: int
     image_file_name: str | None = None
     isModerated: bool
+    isOnlyStudent: bool
 
     class Config:
         orm_mode = True

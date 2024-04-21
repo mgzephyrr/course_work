@@ -33,7 +33,8 @@ async def create_event(event_name: str,
                        location: str,
                        participants_count: int,
                        admin_comment: str = None,
-                       file: UploadFile = None
+                       file: UploadFile = None,
+                       isOnlyStudent: bool = True
                        ) -> SEvent:
 
     if not file:
@@ -45,22 +46,33 @@ async def create_event(event_name: str,
                          ending_time = ending_time,
                          location = location,
                          participants_count = participants_count,
-                         admin_comment=admin_comment
+                         admin_comment=admin_comment,
+                         isOnlyStudent=isOnlyStudent
                          )
 
     newFile = await upload_image(file)
     return await crud.create_event(event=event, file_name=newFile.filename)
 
 @router.get("")
-async def get_all_events() -> List[SEvent]:
-    return await crud.get_all_events()
+async def get_all_events(user: User = Depends(get_current_user)) -> List[SEvent]:
+    if user.system_role_id == 3:
+        # Если роль пользователя - 3, возвращаем мероприятия, где isModerated = True и isOnlyStudent = False
+        return await crud.get_moderated_events_not_only_student()
+    elif user.system_role_id == 5:
+        # Если роль пользователя - 5, возвращаем мероприятия, где isModerated = True
+        return await crud.get_moderated_events()
+    elif user.system_role_id == 4:
+        # Если роль пользователя - 4, возвращаем все мероприятия
+        return await crud.get_all_events()
+    else:
+        raise HTTPException(status_code=403, detail="Forbidden")
 
 @router.get("/{event_id}")
 async def get_event_info(event_id: int) -> SEvent:
     return await crud.get_event_info_by_id(event_id=event_id)
 
 @router.get("/{event_id}/participants")
-async def get_event_participants(event_id: int) -> List[SEventParticipant]:
+async def get_event_participants(event_id: int) -> List[SUser]:
     return await crud.get_event_participants_by_event_id(event_id = event_id)
 
 @router.post("/{event_id}/{user_id}")
