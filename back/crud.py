@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import and_, delete, insert, select
 from back.database import async_session_maker
 from datetime import datetime
@@ -170,6 +171,47 @@ async def set_event_moderation_status(event_id: int, status: bool) -> bool:
             return True
         return False
 
+async def get_student_organizations_for_user(user_id: int):
+    async with async_session_maker() as session:
+        query = select(StudentOrganization).\
+            join(StudentOrganizationMember).\
+            filter(and_(
+                StudentOrganizationMember.user_id == user_id,
+                StudentOrganizationMember.role_id == 1
+            ))
+        result = await session.execute(query)
+        return result.scalars().all()
+
+async def create_event_organizer(user_id: int, event_id: int, stud_org_id: int = None) -> bool:
+    async with async_session_maker() as session:
+        event_organizer = EventOrganizer(user_id= user_id, event_id=event_id, student_organization_id=stud_org_id)
+        session.add(event_organizer)
+        await session.commit()
+        await session.refresh(event_organizer)
+        return True
+    
+async def get_event_organizer_details(event_id: int):
+    async with async_session_maker() as session:
+        event_organizer = await session.execute(select(EventOrganizer).filter_by(event_id=event_id))
+        event_organizer = event_organizer.scalars().first()
+
+        if not event_organizer:
+            raise HTTPException(status_code=404, detail="Event organizer not found")
+
+        if event_organizer.student_organization_id:
+            student_org = await session.execute(select(StudentOrganization).filter_by(id=event_organizer.student_organization_id))
+            student_org = student_org.scalars().first()
+            if student_org:
+                return {"name": student_org.stud_org_name, "avatar": student_org.avatar_file_name}
+            else:
+                raise HTTPException(status_code=404, detail="Student organization not found")
+        else:
+            user = await session.execute(select(User).filter_by(id=event_organizer.user_id))
+            user = user.scalars().first()
+            if user:
+                return {"name": f"{user.first_name} {user.last_name}", "avatar": user.avatar_file_name}
+            else:
+                raise HTTPException(status_code=404, detail="User not found")
 
 async def delete_event_from_db(event_id: int) -> bool:
     async with async_session_maker() as session:
