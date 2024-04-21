@@ -3,6 +3,7 @@
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
 import React, { ReactNode } from 'react'
+import { Toaster } from 'sonner';
 
 const RootLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -16,6 +17,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
               <div className='w-full'>
                   {children}
               </div>
+              <Toaster />
           </section>
       </div>
     </main>

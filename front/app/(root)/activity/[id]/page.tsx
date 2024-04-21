@@ -1,12 +1,17 @@
 "use client"
 
 import EventParticipationTable from '@/components/activity-participation/activity-part-table'
+import { ActivityParticipanceRow } from '@/components/activity-participation/columns'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { API_URL } from '@/constants'
+import { UserSchema } from '@/schemas'
 import axios from 'axios'
 import { CalendarFoldIcon, InfoIcon, UserIcon } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import * as z from "zod";
+import { useRouter } from "next/navigation";
 
 export type ActivityInfo = {
   id: number
@@ -21,37 +26,97 @@ export type ActivityInfo = {
   //organizers: data.data['id']
 }
 
-export async function getActivity(activity_id: number): Promise<ActivityInfo | undefined>{
-  try {
-    const event_data = await axios.get(API_URL + `/events/${activity_id}`,{
+export function onAcceptClick(activity_id: number) {
+
+  axios.put(API_URL + `/events/${activity_id}/moderate`, {
+    params:{
+      event_id: activity_id
+    }
+  })
+  .then(() => {
+    toast("Вы приняли мероприятие", {
+      description: "Спасибо за то что приняли участие в процессе модерации!"
+    })
+  })
+  .catch((e) => {
+    console.log(e.response)
+  })
+}
+
+export function onDeclineClick(activity_id: number){
+
+  axios.delete(API_URL + `/events/${activity_id}/moderate/delete`, {
+    params:{
+      event_id: activity_id
+    }
+  })
+  .then(() => {})
+  .catch((e) => {
+    console.log(e.response)
+  })
+}
+
+export const onParticipateClick = () => {
+
+}
+
+
+function Activity ({params}: { params: {id: number} }) {
+  const activity_id = params.id
+  const router = useRouter()
+  const [activity, setActivity] = useState<ActivityInfo | undefined>(undefined);
+  const [participationList, setParticipationList] = useState<ActivityParticipanceRow[]>([]);
+
+  useEffect(() => {
+    axios.get(API_URL + `/events/${activity_id}`,{
       params:{
         event_id: activity_id
       }
     })
-    const event = {
-      id: event_data.data['id'],
-      event_name: event_data.data['event_name'],
-      event_description: event_data.data['event_description'],
-      starting_time: event_data.data['starting_time'],
-      ending_time: event_data.data['ending_time'],
-      location: event_data.data['location'],
-      participants_count: event_data.data['participants_count'],
-      image_file_name: event_data.data['image_file_name'],
-      isModerated: event_data.data['isModerated'],
-      //organizers: event_data.data['']
-    } as ActivityInfo
+    .then((event_data) => {
+      setActivity({
+        id: event_data.data['id'],
+        event_name: event_data.data['event_name'],
+        event_description: event_data.data['event_description'],
+        starting_time: event_data.data['starting_time'],
+        ending_time: event_data.data['ending_time'],
+        location: event_data.data['location'],
+        participants_count: event_data.data['participants_count'],
+        image_file_name: event_data.data['image_file_name'],
+        isModerated: event_data.data['isModerated'],
+        //organizers: event_data.data['']
+      } as ActivityInfo)
+    })
+    .catch((e) => {
+      console.log(e.response)
+      setActivity(undefined)
+    })
 
-    return event
-  }
-  catch(e){
-    console.log(e.response)
-    return undefined
-  }
-}
+    axios.get(API_URL + `/events/${activity_id}/participants`, {
+        params:{
+            event_id: activity_id
+        }
+    })
+    .then((data) => {
+      setParticipationList(data.data.map((participant: z.infer<typeof UserSchema>) => {
+            return {
+                full_name: participant.last_name + ' ' + participant.first_name + ' ' + participant.paternity,
+                avatar_filename: participant.avatar_file_name ? participant.avatar_file_name : '/default-avatar.png'
+            }
+      }))
+    })
+    .catch((e) => {
+      console.log(e)
+      setParticipationList([])
+    })
+  }, [])
 
-async function Activity ({params}: { params: {id: number} }) {
-  const activity = await getActivity(params.id)
-  //const isAlreadySigned = await getAlreadySigned(activity);
+  // const activity = await getActivity(params.id)
+  // const isAlreadySigned = await getAlreadySigned(activity);
+  if (!activity){
+    return;
+  }
+
   return (
     <section className='flex size-full flex-col gap-3
     bg-light-3 rounded-[10px] border border-gray-300 shadow h-auto'>
@@ -95,11 +160,23 @@ async function Activity ({params}: { params: {id: number} }) {
               !activity?.isModerated &&
               <div className='flex flex-col gap-y-4'>
                 <Button className='flex bg-redbutton-1 hover:bg-redbutton-2 justify-center items-center gap-x-4 rounded-[10px] p-2 max-lg:w-full w-[140px]'
-                        onClick={() => {}}>
+                  onClick={() => {
+                      onDeclineClick(activity_id)
+                      router.replace('/activities')
+                      toast("Вы отклонили мероприятие", {
+                        description: "Спасибо за то что приняли участие в процессе модерации!"
+                      })
+                    }}>
                   Отклонить
                 </Button>
                 <Button className='flex bg-greenbutton-1 hover:bg-greenbutton-2 justify-center items-center gap-x-4 rounded-[10px] p-2 max-md:w-full w-[140px]'
-                        onClick={() => {}}>
+                  onClick={() => {
+                    onAcceptClick(activity_id)
+                    router.replace(`/activities/${activity_id}`)
+                      toast("Вы приняли мероприятие", {
+                        description: "Спасибо за то что приняли участие в процессе модерации!"
+                      })
+                  }}>
                   Принять
                 </Button>
               </div>
@@ -109,7 +186,7 @@ async function Activity ({params}: { params: {id: number} }) {
               activity?.isModerated && /* и еще не зареган */
 
               <Button className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
-                      onClick={() => {}}>
+                      onClick={onParticipateClick}>
                 Принять участие
               </Button>
             }
@@ -133,7 +210,7 @@ async function Activity ({params}: { params: {id: number} }) {
       </div>
       <Separator className='w-full bg-gray-300'/>
       <div className='p-4'>
-        <EventParticipationTable />
+        <EventParticipationTable data={participationList}/>
       </div>
 
     </section>

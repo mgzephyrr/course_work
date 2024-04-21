@@ -57,7 +57,7 @@ export const UserSchema = z.object({
     first_name: z.string(),
     last_name: z.string(),
     paternity: z.string(),
-    avatar_filename: z.string()
+    avatar_file_name: z.string()
 })
 
 export const FeedbackSchema = z.object({
