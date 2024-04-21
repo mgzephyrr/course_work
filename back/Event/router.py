@@ -34,7 +34,9 @@ async def create_event(event_name: str,
                        participants_count: int,
                        admin_comment: str = None,
                        file: UploadFile = None,
-                       isOnlyStudent: bool = True
+                       isOnlyStudent: bool = True,
+                       stud_org_id: int = None,
+                       user: User = Depends(get_current_user)
                        ) -> SEvent:
 
     if not file:
@@ -51,7 +53,13 @@ async def create_event(event_name: str,
                          )
 
     newFile = await upload_image(file)
-    return await crud.create_event(event=event, file_name=newFile.filename)
+    
+    event = await crud.create_event(event=event, file_name=newFile.filename)
+    
+    if(event):
+        await crud.create_event_organizer(user_id=user.id, event_id=event.id, stud_org_id=stud_org_id)
+    
+    return event
 
 @router.get("")
 async def get_all_events(user: User = Depends(get_current_user)) -> List[SEvent]:
@@ -110,3 +118,7 @@ async def delete_event(event_id: int):
         return {"message": "Event deleted successfully"}
     else:
         raise HTTPException(status_code=404, detail="Event not found")
+    
+@router.get("/event_organizer/{event_id}")
+async def get_event_organizer(event_id: int):
+    return await crud.get_event_organizer_details(event_id)
