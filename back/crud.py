@@ -261,3 +261,13 @@ async def get_all_student_org() -> list[StudentOrganization]:
     async with async_session_maker() as session:
         result = await session.execute(select(StudentOrganization))
         return result.scalars().all()
+
+async def get_events_organized_by_user(user_id: int) -> list[Event]:
+    async with async_session_maker() as session:
+        query = (
+            select(Event)
+            .join(EventOrganizer)
+            .filter(EventOrganizer.user_id == user_id)
+        )
+        result = await session.execute(query)
+        return result.scalars().all()

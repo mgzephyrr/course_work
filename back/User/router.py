@@ -122,3 +122,10 @@ async def get_user_by_token_directly(token):
 @router.get("/signedeventsbytoken")
 async def get_events_for_user(user: SUser = Depends(get_user_by_token_directly)) -> List[SEvent]:
     return await crud.get_events_for_user(user_id=user.id)
+
+@router.get("/my_organized_events")
+async def get_my_organized_events(user: SUser = Depends(get_current_user)) -> List[SEvent]:
+    events = await crud.get_events_organized_by_user(user.id)
+    if not events:
+        raise HTTPException(status_code=404, detail="No events organized by the current user")
+    return events
