@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select
+from sqlalchemy import and_, insert, select
 from back.database import async_session_maker
 from datetime import datetime
 import passlib.hash
@@ -147,10 +147,22 @@ async def get_all_events() -> list[Event]:
     async with async_session_maker() as session:
         result = await session.execute(select(Event))
         return result.scalars().all()
-
-async def get_event_participants_by_event_id(event_id: int) -> list[EventParticipant]:
+    
+async def get_moderated_events_not_only_student() -> list[Event]:
     async with async_session_maker() as session:
-        query = select(EventParticipant).where(EventParticipant.event_id == event_id)
+        query = select(Event).filter(and_(Event.isModerated == True, Event.isOnlyStudent == False))
+        result = await session.execute(query)
+        return result.scalars().all()
+
+async def get_moderated_events() -> list[Event]:
+    async with async_session_maker() as session:
+        query = select(Event).filter(Event.isModerated == True)
+        result = await session.execute(query)
+        return result.scalars().all()
+
+async def get_event_participants_by_event_id(event_id: int) -> list[User]:
+    async with async_session_maker() as session:
+        query = select(User).join(EventParticipant).filter(EventParticipant.event_id == event_id)
         result = await session.execute(query)
         return result.scalars().all()
 

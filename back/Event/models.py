@@ -15,6 +15,7 @@ class Event(Base):
     admin_comment = Column(Text, nullable=True)
     image_file_name = Column(String, nullable=True)
     isModerated = Column(Boolean, nullable=False)
+    isOnlyStudent = Column(Boolean, nullable=False, default=False)
 
     eventparticipants = relationship("EventParticipant", back_populates="event", cascade='save-update, merge, delete')
     organizers = relationship("EventOrganizer", back_populates="event", cascade='save-update, merge, delete')
