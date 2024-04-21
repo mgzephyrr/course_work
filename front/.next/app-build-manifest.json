@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/(root)/(home)/page": [
+    "/(root)/activity/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(root)/(home)/page.js"
+      "static/chunks/app/(root)/activity/[id]/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -26,15 +26,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(root)/(home)/organisations/page.js"
     ],
-    "/(root)/profile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(root)/profile/page.js"
-    ],
     "/(root)/new_activity/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(root)/new_activity/page.js"
+    ],
+    "/(root)/(home)/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/page.js"
     ]
   }
 }
