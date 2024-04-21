@@ -1,15 +1,13 @@
+import FeedbackForm from '@/components/feedback-form'
 import React from 'react'
 
-const Feedback = () => {
+const FeedbackPage = () => {
   return (
-    <section className='flex size-full flex-col gap-10'>
-      <h1 className='text-3xl font-bold'>
-        Feedback
-      </h1>
-
-
+    <section className='flex size-full flex-col gap-5
+      bg-light-3 p-6 rounded-[14px]'>
+        <FeedbackForm />
     </section>
   )
 }
 
-export default Feedback
+export default FeedbackPage

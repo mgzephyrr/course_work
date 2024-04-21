@@ -15,7 +15,7 @@ export const columns: ColumnDef<ParticipanceEventRow>[] = [
     header: "Статус",
     id: "Статус",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("Статус")}</div>
+      <div>{row.getValue("Статус")}</div>
     ),
   },
   {
@@ -23,7 +23,7 @@ export const columns: ColumnDef<ParticipanceEventRow>[] = [
     header: "Название",
     id: "Название",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("Название")}</div>
+      <div>{row.getValue("Название")}</div>
     ),
   },
   {

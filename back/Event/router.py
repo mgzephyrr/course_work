@@ -29,10 +29,12 @@ async def get_upcoming_event() -> SEvent:
 async def create_event(event_name: str,
                        event_description: str,
                        starting_time: datetime,
-                       ending_time: datetime, location: str,
+                       ending_time: datetime,
+                       location: str,
                        participants_count: int,
                        admin_comment: str = None,
-                       file: UploadFile = File(...)) -> SEvent:
+                       file: UploadFile = None
+                       ) -> SEvent:
 
     event = SEventCreate(event_name = event_name,
                          event_description = event_description,
@@ -67,7 +69,7 @@ async def create_event_participant(event_id: int, user_id: int, event_participan
 
 
 @router.post("{event_id}/addimage")
-async def add_event_image(event_id: int,file: UploadFile = File(...)):
+async def add_event_image(event_id: int, file: UploadFile = File(...)):
     newFile = await upload_image(file)
     return await crud.add_event_image(file_name=newFile.filename, event_id=event_id)
 

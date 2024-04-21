@@ -21,6 +21,7 @@ import { getUser } from "@/app/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import ParticipationTable from "@/components/participation-table/participation-table"
 import AvatarUploader from "@/components/avatar-uploader"
+import ModeratedActivitiesTable from "@/components/moderated-activities-table/moderated-activities-table"
 
 export function TabsShower() {
   return (
@@ -83,7 +84,7 @@ export function TabsShower() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            ПОТОМ
+            <ModeratedActivitiesTable />
           </CardContent>
         </Card>
       </TabsContent>
@@ -96,11 +97,12 @@ export default async function ProfilePage() {
 
   return (
     <section className='flex size-full flex-col gap-5
-        bg-light-3 p-6 rounded-[14px] border shadow-sm'>
+        bg-light-3 p-6 rounded-[14px] border shadow-sm max-sm:w-screen'>
       <div className="flex flex-row gap-x-5 items-center">
         <Avatar className={`max-sm:h-[60px] max-sm:w-[60px] h-[90px] w-[90px] lg:h-[120px] lg:w-[120px] border-4 border-gray-300`}>
             {
-                !user && <Skeleton className={`max-sm:h-[60px] max-sm:w-[60px] md:h-[90px] md:w-[90px] lg:h-[120px] lg:w-[120px] rounded-full`}/>
+                !user && <Skeleton className={`max-sm:h-[60px] max-sm:w-[60px] md:h-[90px] md:w-[90px]
+                lg:h-[120px] lg:w-[120px] rounded-full`}/>
             }
             {
                 user?.avatar_filename &&

@@ -129,6 +129,12 @@ async def get_event_info_by_id(event_id: int) -> Event:
         result = await session.execute(query)
         return result.scalar_one_or_none()
 
+async def get_stud_org_info_by_id(stud_org_id: int) -> StudentOrganization:
+    async with async_session_maker() as session:
+        query = select(StudentOrganization).filter(StudentOrganization.id == stud_org_id)
+        result = await session.execute(query)
+        return result.scalar_one_or_none()
+
 async def get_events_for_user(user_id: int) -> list[Event]:
     async with async_session_maker() as session:
         query = select(Event).join(EventParticipant).where(EventParticipant.user_id == user_id)
