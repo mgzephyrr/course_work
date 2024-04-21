@@ -93,3 +93,17 @@ async def load_event_image_by_id(event_id: int) -> FileResponse:
         raise HTTPException(status_code=404, detail="File not found")
 
     return FileResponse(file_path)
+
+@router.put("/{event_id}/moderate")
+async def moderate_event(event_id: int):
+    if await crud.set_event_moderation_status(event_id=event_id, status=True):
+        return {"message": "Event moderated successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+@router.delete("/{event_id}/moderate/delete")
+async def delete_event(event_id: int):
+    if await crud.delete_event_from_db(event_id=event_id):
+        return {"message": "Event deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Event not found")

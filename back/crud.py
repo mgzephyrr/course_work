@@ -1,4 +1,4 @@
-from sqlalchemy import and_, insert, select
+from sqlalchemy import and_, delete, insert, select
 from back.database import async_session_maker
 from datetime import datetime
 import passlib.hash
@@ -159,6 +159,24 @@ async def get_moderated_events() -> list[Event]:
         query = select(Event).filter(Event.isModerated == True)
         result = await session.execute(query)
         return result.scalars().all()
+
+async def set_event_moderation_status(event_id: int, status: bool) -> bool:
+    async with async_session_maker() as session:
+        event = await session.get(Event, event_id)
+        if event:
+            event.isModerated = status
+            await session.commit()
+            await session.refresh(event)
+            return True
+        return False
+
+
+async def delete_event_from_db(event_id: int) -> bool:
+    async with async_session_maker() as session:
+        statement = delete(Event).where(Event.id == event_id)
+        result = await session.execute(statement)
+        await session.commit()  # Применяем изменения в базе данных
+        return bool(result.rowcount)
 
 async def get_event_participants_by_event_id(event_id: int) -> list[User]:
     async with async_session_maker() as session:
