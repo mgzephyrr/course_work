@@ -290,8 +290,8 @@ async def get_organization_members(organization_id: int) -> list[dict]:
                 {
                     "first_name": row[0],
                     "last_name": row[1],
-                    "avatar_file_name": row[2],
-                    "paternity": row[3],
+                    "paternity": row[2],
+                    "avatar_file_name": row[3],
                     "role_name": row[4]
                 }
                 for row in members
