@@ -20,6 +20,16 @@ eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Inter_aa
 
 /***/ }),
 
+/***/ "(ssr)/./node_modules/next/font/google/target.css?{\"path\":\"components\\\\auth\\\\header.tsx\",\"import\":\"Poppins\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"600\"]}],\"variableName\":\"font\"}":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/font/google/target.css?{"path":"components\\auth\\header.tsx","import":"Poppins","arguments":[{"subsets":["latin"],"weight":["600"]}],"variableName":"font"} ***!
+  \****************************************************************************************************************************************************************************************/
+/***/ ((module) => {
+
+eval("// Exports\nmodule.exports = {\n\t\"style\": {\"fontFamily\":\"'__Poppins_12c8de', '__Poppins_Fallback_12c8de'\",\"fontWeight\":600,\"fontStyle\":\"normal\"},\n\t\"className\": \"__className_12c8de\"\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvbmV4dC9mb250L2dvb2dsZS90YXJnZXQuY3NzP3tcInBhdGhcIjpcImNvbXBvbmVudHNcXFxcYXV0aFxcXFxoZWFkZXIudHN4XCIsXCJpbXBvcnRcIjpcIlBvcHBpbnNcIixcImFyZ3VtZW50c1wiOlt7XCJzdWJzZXRzXCI6W1wibGF0aW5cIl0sXCJ3ZWlnaHRcIjpbXCI2MDBcIl19XSxcInZhcmlhYmxlTmFtZVwiOlwiZm9udFwifSIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0EsV0FBVyxxR0FBcUc7QUFDaEg7QUFDQSIsInNvdXJjZXMiOlsid2VicGFjazovL3Rlc3RfY291cnNlLy4vbm9kZV9tb2R1bGVzL25leHQvZm9udC9nb29nbGUvdGFyZ2V0LmNzcz9iYjRjIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIEV4cG9ydHNcbm1vZHVsZS5leHBvcnRzID0ge1xuXHRcInN0eWxlXCI6IHtcImZvbnRGYW1pbHlcIjpcIidfX1BvcHBpbnNfMTJjOGRlJywgJ19fUG9wcGluc19GYWxsYmFja18xMmM4ZGUnXCIsXCJmb250V2VpZ2h0XCI6NjAwLFwiZm9udFN0eWxlXCI6XCJub3JtYWxcIn0sXG5cdFwiY2xhc3NOYW1lXCI6IFwiX19jbGFzc05hbWVfMTJjOGRlXCJcbn07XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/font/google/target.css?{\"path\":\"components\\\\auth\\\\header.tsx\",\"import\":\"Poppins\",\"arguments\":[{\"subsets\":[\"latin\"],\"weight\":[\"600\"]}],\"variableName\":\"font\"}\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/api/image.js":
 /*!*********************************************!*\
   !*** ./node_modules/next/dist/api/image.js ***!

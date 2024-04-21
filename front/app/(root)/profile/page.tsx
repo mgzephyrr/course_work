@@ -1,4 +1,7 @@
+"use client"
+
 import * as React from "react"
+import * as z from "zod";
 
 import {
   Card,
@@ -17,13 +20,22 @@ import {
 
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getUser } from "@/app/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import ParticipationTable from "@/components/participation-table/participation-table"
+import ParticipationTable, { GetStatus } from "@/components/participation-table/participation-table"
 import AvatarUploader from "@/components/avatar-uploader"
 import ModeratedActivitiesTable from "@/components/moderated-activities-table/moderated-activities-table"
+import { useEffect, useState } from "react"
+import { EventSchema, UserSchema } from "@/schemas"
+import axios from "axios";
+import { API_URL } from "@/constants";
+import { ParticipanceEventRow } from "@/components/participation-table/columns";
+import { ModeratedActivitiesRow } from "@/components/moderated-activities-table/columns";
 
-export function TabsShower() {
+export function TabsShower({
+  signedEvents, organisedEvents
+} : {
+  signedEvents: ParticipanceEventRow[], organisedEvents: ModeratedActivitiesRow[]
+}) {
   return (
     <Tabs defaultValue="avatar" className="w-full">
       <TabsList className="grid w-full grid-cols-3 gap-x-0.5 max-md:h-12 ">
@@ -71,7 +83,7 @@ export function TabsShower() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <ParticipationTable />
+            <ParticipationTable data={signedEvents} />
           </CardContent>
         </Card>
       </TabsContent>
@@ -84,7 +96,7 @@ export function TabsShower() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <ModeratedActivitiesTable />
+            <ModeratedActivitiesTable data={organisedEvents} />
           </CardContent>
         </Card>
       </TabsContent>
@@ -92,8 +104,56 @@ export function TabsShower() {
   )
 }
 
-export default async function ProfilePage() {
-  const user = await getUser();
+export default function ProfilePage() {
+  //const user = await getUser();
+
+  const [user, setUser] = useState<z.infer<typeof UserSchema> | undefined>()
+  const [signedEvents, setSignedEvents] = useState<ParticipanceEventRow[]>([])
+  const [organisedEvents, setOrganisedEvents] = useState<ModeratedActivitiesRow[]>([])
+
+  useEffect(() => {
+    axios.defaults.withCredentials = true;
+    axios.get(API_URL + '/auth/me')
+    .then((data) => {
+      setUser({
+          email: data.data['email'],
+          first_name: data.data['first_name'],
+          last_name: data.data['last_name'],
+          paternity: data.data['paternity'],
+          avatar_file_name: data.data['avatar_file_name'],
+      } as z.infer<typeof UserSchema>)
+    })
+    .catch((e) => setUser(undefined))
+
+    axios.get(API_URL + '/auth/signedevents')
+    .then((data) => {
+      setSignedEvents(data.data.map((row: z.infer<typeof EventSchema>) => {
+            const start = row.starting_time.toString()
+            const end = row.ending_time.toString()
+
+            return {
+                id: row.id,
+                participants_count: row.participants_count,
+                status: GetStatus(start, end),
+                name: row.event_name
+            }
+        }))
+    })
+    .catch(() => { setSignedEvents([]) })
+
+    axios.get(API_URL + '/auth/my_organized_events')
+    .then((data) => {
+      setOrganisedEvents(data.data.map((row: z.infer<typeof EventSchema>) => {
+            return {
+                id: row.id,
+                participants_count: row.participants_count,
+                status: row.isModerated ? "Принято" : "На рассмотрении",
+                name: row.event_name
+            }
+        }))
+    })
+    .catch(() => { setOrganisedEvents([]) })
+    }, [])
 
   return (
     <section className='flex size-full flex-col gap-5
@@ -105,11 +165,11 @@ export default async function ProfilePage() {
                 lg:h-[120px] lg:w-[120px] rounded-full`}/>
             }
             {
-                user?.avatar_filename &&
-                <AvatarImage src={`images/${user?.avatar_filename}`}/>
+                user?.avatar_file_name &&
+                <AvatarImage src={`images/${user?.avatar_file_name}`}/>
             }
             {
-                user && !user?.avatar_filename &&
+                user && !user?.avatar_file_name &&
                 <AvatarFallback className="max-sm:text-xl text-2xl lg:text-4xl">
                     {(user?.first_name.slice(0, 1)! + user?.last_name.slice(0, 1)!)}
                 </AvatarFallback>
@@ -127,7 +187,7 @@ export default async function ProfilePage() {
 
       </div>
       <Separator className="bg-gray-300"/>
-      <TabsShower />
+      <TabsShower signedEvents={signedEvents} organisedEvents={organisedEvents}/>
     </section>
   )
 }

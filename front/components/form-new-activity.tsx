@@ -2,22 +2,73 @@
 
 import { FormError } from '@/components/form-error';
 import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from '@/components/ui/form';
 import { API_URL } from '@/constants';
-import { CreateEventSchema } from '@/schemas';
+import { CreateEventSchema, OrganisationSchema } from '@/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Input } from "./ui/input"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form';
 import * as z from "zod"
 import { FormSuccess } from './form-success';
 import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command"
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { cn } from '@/lib/utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
+
 
 const NewActivityForm = () => {
+    type OrganisationInfo = {
+        label: string,
+        value: number
+    }
+
+    const [organisationVariants, setOrganisationVariants] = useState<OrganisationInfo[]>([{
+                    label: "От своего имени",
+                    value: 0
+                }] as OrganisationInfo[])
+
     const [file, setFile] = useState<File>();
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
+
+    console.log(organisationVariants)
+
+    useEffect(() => {
+        axios.get(API_URL + '/studorg/user_organizations')
+        .then((data) => {
+            // const orgs = data.data.map((org: z.infer<typeof OrganisationSchema>) => {
+            //     return {
+            //         label: org.stud_org_name,
+            //         value: org.id
+            //     } as OrganisationInfo
+            // })
+
+            // const fullOrgs = [{
+            //         label: "От своего имени",
+            //         value: 0
+            //     },
+            //     ...organisationVariants]
+
+            // setOrganisationVariants(fullOrgs)
+        })
+        .catch((e) => { console.log(e) })
+    }, [])
 
     const form = useForm<z.infer<typeof CreateEventSchema>>({
         resolver: zodResolver(CreateEventSchema),
@@ -226,6 +277,91 @@ const NewActivityForm = () => {
                             </FormItem>
                         )}
                     />
+                    <FormField
+                        control={form.control}
+                        name="isStudentOnly"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                <FormControl>
+                                    <Checkbox
+                                        id="student_only_checkbox"
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                        Только студенты ВШЭ
+                                    </FormLabel>
+                                    <FormDescription>
+                                        Люди, не учащиеся в ВШЭ не смогут участвовать в мероприятии
+                                    </FormDescription>
+                                </div>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="organisation"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                            <FormLabel>От имени студ. организации</FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                <FormControl>
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className={cn(
+                                            "w-auto justify-between",
+                                            !field.value && "text-muted-foreground"
+                                        )}
+                                    >
+                                        {field.value
+                                            ? organisationVariants.find(
+                                                (organisation) => organisation.value === field.value
+                                            )?.label
+                                            : "Выберите организацию"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0">
+                                <Command>
+                                    <CommandInput placeholder="Найти организацию..." />
+                                    <CommandEmpty>Нет совпадений.</CommandEmpty>
+                                    <CommandGroup>
+                                    {organisationVariants.map((organisation) => (
+                                        <CommandItem
+                                            value={organisation.label}
+                                            key={organisation.value}
+                                            onSelect={() => {
+                                                form.setValue("organisation", organisation.value)
+                                            }}
+                                        >
+                                        <Check
+                                            className={cn(
+                                            "mr-2 h-4 w-4",
+                                            organisation.value === field.value
+                                                ? "opacity-100"
+                                                : "opacity-0"
+                                            )}
+                                        />
+                                        {organisation.label}
+                                        </CommandItem>
+                                    ))}
+                                    </CommandGroup>
+                                </Command>
+                                </PopoverContent>
+                            </Popover>
+                            <FormDescription>
+                                Вы можете организовать мероприятие от имени какой-либо организации, либо от
+                                своего собственного.
+                            </FormDescription>
+                            <FormMessage />
+                            </FormItem>
+                        )}
+                        />
                     <FormField
                         control={form.control}
                         name="avatar"

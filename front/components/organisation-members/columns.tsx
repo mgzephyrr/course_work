@@ -3,7 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table"
 
 export type OrganisationMember = {
-  id: number
   full_name: string
   avatar_filename: string
   role: "Глава" | "Участник"

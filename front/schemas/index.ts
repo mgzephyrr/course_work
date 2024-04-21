@@ -49,7 +49,11 @@ export const EventSchema = z.object({
 //
 export const OrganisationSchema = z.object({
     id: z.number(),
-
+    stud_org_name: z.string(),
+    stud_org_description: z.string(),
+    vk_link: z.string(),
+    telegram_link: z.string(),
+    avatar_file_name: z.string(),
 })
 
 export const UserSchema = z.object({
@@ -96,5 +100,7 @@ export const CreateEventSchema = z.object({
     }).max(50, {
         message: "Место проведения мероприятия не может содержать более 50 символов"
     }),
-    avatar: z.any()
+    avatar: z.any(),
+    isStudentOnly: z.boolean(),
+    organisation: z.number()
 })

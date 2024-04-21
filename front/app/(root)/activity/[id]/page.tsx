@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { API_URL } from '@/constants'
 import { UserSchema } from '@/schemas'
 import axios from 'axios'
-import { CalendarFoldIcon, InfoIcon, UserIcon } from 'lucide-react'
+import { CalendarFoldIcon, InfoIcon, Rotate3D, UserIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import * as z from "zod";
@@ -27,7 +27,6 @@ export type ActivityInfo = {
 }
 
 export function onAcceptClick(activity_id: number) {
-
   axios.put(API_URL + `/events/${activity_id}/moderate`, {
     params:{
       event_id: activity_id
@@ -44,20 +43,30 @@ export function onAcceptClick(activity_id: number) {
 }
 
 export function onDeclineClick(activity_id: number){
-
   axios.delete(API_URL + `/events/${activity_id}/moderate/delete`, {
     params:{
       event_id: activity_id
     }
   })
-  .then(() => {})
   .catch((e) => {
     console.log(e.response)
   })
 }
 
-export const onParticipateClick = () => {
-
+export const onParticipateClick = (activity_id: number) => {
+  axios.post(API_URL + `/events/${activity_id}/sign`, {
+    params:{
+      event_id: activity_id
+    }
+  })
+  .then(() => {
+    toast("Вы приняли участие на мероприятии", {
+      description: "Надеемся вам понравится!"
+    })
+  })
+  .catch((e) => {
+    console.log(e.response)
+  })
 }
 
 
@@ -66,6 +75,7 @@ function Activity ({params}: { params: {id: number} }) {
   const router = useRouter()
   const [activity, setActivity] = useState<ActivityInfo | undefined>(undefined);
   const [participationList, setParticipationList] = useState<ActivityParticipanceRow[]>([]);
+  const [isAlreadySigned, setIsAlreadySigned] = useState<boolean>(true);
 
   useEffect(() => {
     axios.get(API_URL + `/events/${activity_id}`,{
@@ -111,8 +121,6 @@ function Activity ({params}: { params: {id: number} }) {
     })
   }, [])
 
-  // const activity = await getActivity(params.id)
-  // const isAlreadySigned = await getAlreadySigned(activity);
   if (!activity){
     return;
   }
@@ -173,9 +181,9 @@ function Activity ({params}: { params: {id: number} }) {
                   onClick={() => {
                     onAcceptClick(activity_id)
                     router.replace(`/activities/${activity_id}`)
-                      toast("Вы приняли мероприятие", {
-                        description: "Спасибо за то что приняли участие в процессе модерации!"
-                      })
+                    toast("Вы приняли мероприятие", {
+                      description: "Спасибо за то что приняли участие в процессе модерации!"
+                    })
                   }}>
                   Принять
                 </Button>
@@ -183,19 +191,22 @@ function Activity ({params}: { params: {id: number} }) {
             }
 
             {
-              activity?.isModerated && /* и еще не зареган */
+              activity?.isModerated && !isAlreadySigned &&
 
               <Button className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
-                      onClick={onParticipateClick}>
+                      onClick={() => {
+                        onParticipateClick(activity_id)
+                        router.refresh()
+                        }}>
                 Принять участие
               </Button>
             }
 
             {
-              // activity?.isModerated && /* и зареган */
-              // <Button className='flex bg-gray-500 justify-center items-center gap-x-4 rounded-[10px] p-2 text-muted-foreground'>
-              //   Вы записаны
-              // </Button>
+              activity?.isModerated && isAlreadySigned &&
+              <Button className='flex bg-gray-200 hover:bg-gray-300 justify-center items-center gap-x-4 rounded-[10px] p-2 text-muted-foreground'>
+                Вы записаны
+              </Button>
             }
         </div>
 

@@ -1,4 +1,6 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import { OrganisationInfo } from '../../(home)/organisations/page'
 import axios from 'axios'
 import { API_URL } from '@/constants'
@@ -6,36 +8,59 @@ import { Separator } from '@/components/ui/separator'
 import { InfoIcon } from 'lucide-react'
 import Image from 'next/image';
 import OrganisationMembersTable from '@/components/organisation-members/organisation-members-table'
+import { OrganisationMember } from '@/components/organisation-members/columns'
 
-export async function getOrganisation(organisation_id: number): Promise<OrganisationInfo | undefined>{
-  // const user = await getUser();
-  // добавить проверку на то может ли чел смотреть (передать айдишник)
-  try {
-    const organisation_data = await axios.get(API_URL + `/studorg/${organisation_id}`, {
+function Organisation({params}: { params: {id: number} }) {
+  type MemberInfo = {
+    first_name: string,
+    last_name: string,
+    avatar_file_name: string,
+    paternity: string,
+    role_name: string
+  }
+
+  const organization_id = params.id
+  const [organisation, setOrganisation] = useState<OrganisationInfo | undefined>()
+  const [orgMembers, setOrgMembers] = useState<OrganisationMember[]>([])
+
+  useEffect(() => {
+    axios.get(API_URL + `/studorg/${organization_id}`, {
         params:{
-            stud_org_id: organisation_id
+            stud_org_id: organization_id
         }
     })
+    .then((organisation_data) => {
+        setOrganisation({
+            id: organisation_data.data['id'],
+            avatar_file_name: organisation_data.data['avatar_file_name'],
+            stud_org_name: organisation_data.data['stud_org_name'],
+            stud_org_description: organisation_data.data['stud_org_description'],
+            vk_link: organisation_data.data['vk_link'],
+            telegram_link: organisation_data.data['telegram_link'],
+        })
+    })
+    .catch((e) => console.log(e))
 
-    const organisation = {
-        id: organisation_data.data['id'],
-        avatar_file_name: organisation_data.data['avatar_file_name'],
-        stud_org_name: organisation_data.data['stud_org_name'],
-        stud_org_description: organisation_data.data['stud_org_description'],
-        vk_link: organisation_data.data['vk_link'],
-        telegram_link: organisation_data.data['telegram_link'],
-    } as OrganisationInfo
+    axios.get(API_URL + `/studorg/${organization_id}/members`, {
+        params:{
+            organization_id: organization_id
+        }
+    })
+    .then((data) => {
+        setOrgMembers(data.data.map((member: MemberInfo) => {
+            return {
+                full_name: member['last_name'] + ' ' + member['first_name'] + ' ' + member['paternity'],
+                avatar_filename: member['avatar_file_name'] ? member['avatar_file_name'] : '/default-avatar.png',
+                role: member['role_name']
+            }
+        }))
+    })
+    .catch((e) => setOrgMembers([]))
+  }, [])
 
-    return organisation
+  if (!organisation){
+    return;
   }
-  catch(e){
-    console.log(e.response)
-    return undefined
-  }
-}
-
-async function Organisation({params}: { params: {id: number} }) {
-  const organisation = await getOrganisation(params.id)
 
   return (
     <section className='flex size-full flex-col gap-3 p-6
@@ -83,7 +108,7 @@ async function Organisation({params}: { params: {id: number} }) {
             </h1>
         </div>
         <Separator className='w-full bg-gray-300'/>
-        <OrganisationMembersTable />
+        <OrganisationMembersTable data={orgMembers} />
     </section>
   )
 }
