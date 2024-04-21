@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from typing import List
+from back.StudentOrganizationMember.schemas import SStudentOrganizationMember
 from back.User.depnds import get_current_user
 from back.User.models import User
 from back.config import settings
@@ -20,6 +21,13 @@ router = APIRouter(
 @router.get("/user_organizations")
 async def get_user_student_organizations(user: User = Depends(get_current_user)) -> List[SStudentOrganization]:
     return await crud.get_student_organizations_for_user(user_id=user.id)
+
+@router.get("/{organization_id}/members")
+async def get_organization_members(organization_id: int):
+    members = await crud.get_organization_members(organization_id)
+    if not members:
+        raise HTTPException(status_code=404, detail="Organization not found")
+    return members
 
 @router.post("/create")
 async def create_stud_org(student_org_name: str, stud_org_description: str, vk_link: str, telegram_link: str, file: UploadFile = File(...)) -> SStudentOrganization:

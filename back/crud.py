@@ -271,3 +271,27 @@ async def get_events_organized_by_user(user_id: int) -> list[Event]:
         )
         result = await session.execute(query)
         return result.scalars().all()
+    
+async def get_organization_members(organization_id: int) -> list[dict]:
+    async with async_session_maker() as session:
+        async with session.begin():
+            query = (
+                select(User.first_name, User.last_name, User.avatar_file_name, StudentOrganizationRole.role_name)
+                .select_from(StudentOrganizationMember)
+                .join(User, User.id == StudentOrganizationMember.user_id)
+                .join(StudentOrganizationRole, StudentOrganizationRole.id == StudentOrganizationMember.role_id)
+                .filter(StudentOrganizationMember.student_organization_id == organization_id)
+            )
+            result = await session.execute(query)
+            members = result.all()
+            
+            formatted_members = [
+                {
+                    "first_name": row[0],
+                    "last_name": row[1],
+                    "avatar_file_name": row[2],
+                    "role_name": row[3]
+                }
+                for row in members
+            ]
+            return formatted_members
