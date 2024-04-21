@@ -95,7 +95,7 @@ async def create_event_participant(event_id: int, event_participant: SEventParti
 
 @router.get("/{event_id}/is_sign")
 async def check_event_registration(event_id: int, user: User = Depends(get_current_user)):
-    registration_status = await crud.check_event_registration(event_id=event_id, user_id=user.id)
+    registration_status = await crud.is_user_registered_for_event(event_id=event_id, user_id=user.id)
     return registration_status
 
 @router.post("{event_id}/addimage")
