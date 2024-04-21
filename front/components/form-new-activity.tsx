@@ -72,6 +72,11 @@ const NewActivityForm = () => {
             return;
         }
 
+        if (!file){
+            setError("Загрузите заставку своего мероприятия!")
+            return;
+        }
+
         axios.request({
             method: 'POST',
             url: API_URL + "/events/create",
@@ -91,9 +96,8 @@ const NewActivityForm = () => {
                 'Content-Type': 'multipart/form-data'
             },
         })
-        .catch((e) => { console.log(e) })
-
-        setSuccess("Мероприятие отправлено на рассмотрение!");
+        .then(() => { setSuccess("Мероприятие отправлено на рассмотрение!"); })
+        .catch((e) => { setError("Произошла непредвиденная ошибка!") })
     }
 
   return (
