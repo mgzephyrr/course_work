@@ -17,6 +17,7 @@ class SUser(SUserBase):
     id: int
     system_role_id: int = 3
     avatar_file_name: str | None = None
+    isVerified: bool = False
 
     class Config:
         orm_mode = True

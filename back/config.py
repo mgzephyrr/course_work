@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     MAX_FILE_SIZE_BYTES: int
     IMAGEDIR: str
+    
+    EMAILPASSWORD: str
 
     class Config:
         env_file = ".env"

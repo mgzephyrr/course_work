@@ -1,5 +1,5 @@
 import passlib.hash
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from back.database import Base
 from sqlalchemy.orm import relationship
 
@@ -14,7 +14,8 @@ class User(Base):
     paternity = Column(String(50), nullable=True)
     system_role_id = Column(Integer, ForeignKey('system_roles.id', ondelete='CASCADE'), default=3)
     avatar_file_name = Column(String, nullable=True)
-
+    isVerified = Column(Boolean, nullable=False, default=False)
+    
     reviews = relationship("SystemReview", back_populates="user", cascade='save-update, merge, delete')
     system_role = relationship("SystemRole", back_populates="users", cascade='save-update, merge, delete', passive_deletes=True)
     eventparticipant = relationship("EventParticipant", back_populates="user", cascade='save-update, merge, delete')

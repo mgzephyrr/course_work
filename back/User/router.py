@@ -1,5 +1,9 @@
 from datetime import timedelta
+from email.message import EmailMessage
+import random
+import smtplib
 import re
+import string
 from typing import List
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Response, Cookie
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -19,6 +23,7 @@ from back.images_upload.repo import upload_image
 from back import auth
 from back.config import settings
 from back import crud
+
 router = APIRouter(
     prefix="/auth",
     tags=["Аутентификация", "Работа с пользователем"]
@@ -28,7 +33,7 @@ email_regex = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*
 
 
 @router.post("/signup")
-async def create_user(user: SUserCreate) -> SUser:
+async def create_user(user: SUserCreate,) -> SUser:
     if re.match(email_regex, user.email):
         system_role_id = None
         if user.email.endswith("@edu.hse.ru"):
@@ -45,7 +50,15 @@ async def create_user(user: SUserCreate) -> SUser:
         db_user = await crud.get_user_by_email(email=user.email)
         if db_user:
             raise HTTPException(status_code=400, detail="Email already in use")
-
+        
+        access_token_expires = timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = auth.create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+        )
+        await crud.add_magic_link(access_token)
+        await send_verification_link(email=user.email, token=access_token)
+        print(access_token)
         return await crud.create_user(user=user, system_role_id=system_role_id)
     else:
         raise HTTPException(status_code=400, detail="Invalid email format")
@@ -54,16 +67,21 @@ async def create_user(user: SUserCreate) -> SUser:
 @router.post("/login", response_model=Token)
 async def login_for_access_token(response: Response, from_data: OAuth2PasswordRequestForm = Depends()):
     db_user = await crud.get_user_by_email(email=from_data.username)
-    if not db_user or not auth.verify_password(from_data.password, db_user.hashed_password):
+    
+    if(not await crud.is_user_verified(db_user.id)):
         raise HTTPException(
-            status_code=401, detail="Incorrect email or password")
-    access_token_expires = timedelta(
-        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = auth.create_access_token(
-        data={"sub": db_user.email}, expires_delta=access_token_expires
-    )
-    response.set_cookie(key="Authorization", value= access_token, httponly=True)
-    return {"access_token": access_token, "token_type": "bearer"}
+            status_code=401, detail="Email not verified")
+    else:
+        if not db_user or not auth.verify_password(from_data.password, db_user.hashed_password):
+            raise HTTPException(
+                status_code=401, detail="Incorrect email or password")
+        access_token_expires = timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = auth.create_access_token(
+            data={"sub": db_user.email}, expires_delta=access_token_expires
+        )
+        response.set_cookie(key="Authorization", value= access_token, httponly=True)
+        return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.post("/logout")
@@ -129,3 +147,47 @@ async def get_my_organized_events(user: SUser = Depends(get_current_user)) -> Li
     if not events:
         raise HTTPException(status_code=404, detail="No events organized by the current user")
     return events
+
+@router.get("/verify")
+async def verify_email(token: str):
+    token = await crud.find_token_by_value(token)
+    
+    if not token:
+        raise HTTPException(status_code=404, detail="Token not found.")
+    user = await get_current_user(token=token.token)
+    
+    verification = await crud.verify_user(user_id=user.id)
+    
+    if(verification):
+        return {"message": "Email verified successfully."}
+    else:
+        return {"message": "Could not verify email."}
+
+@router.post("/send-verification-link")
+async def send_verification_link(email: str, token: str):
+
+    email_address = "hsesems@gmail.com"
+    email_password = settings.EMAILPASSWORD
+
+    msg = EmailMessage()
+    msg['Subject'] = "Код подтверждения для регистрации в SEMS"
+    msg['From'] = email_address
+    msg['To'] = email
+    msg.set_content(
+        f"""\
+        Здравствуйте!
+
+        Ваша ссылка подтверждения для регистрации в SEMS: http://127.0.0.1:8000/auth/verify?token={token}
+        
+        Если вы не запрашивали этот код, проигнорируйте это сообщение.
+        """,
+    )
+
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(email_address, email_password)
+            smtp.send_message(msg)
+    except Exception as e:
+        return f"Не удалось отправить сообщение: {e}"
+
+    return {"message": "Код подтверждения успешно отправлен на указанный адрес электронной почты."}

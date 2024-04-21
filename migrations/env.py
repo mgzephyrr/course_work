@@ -20,6 +20,7 @@ from back.StudentOrganizationRole.models import StudentOrganizationRole
 from back.StudentOrganizationMember.models import StudentOrganizationMember
 from back.Event.models import Event
 from back.StudentOrganization.models import StudentOrganization
+from back.MagicLinks.models import MagicLink
 from back.config import settings
 
 # this is the Alembic Config object, which provides

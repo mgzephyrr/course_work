@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy import and_, delete, insert, select
+from back.MagicLinks.models import MagicLink
 from back.database import async_session_maker
 from datetime import datetime
 import passlib.hash
@@ -296,3 +297,40 @@ async def get_organization_members(organization_id: int) -> list[dict]:
                 for row in members
             ]
             return formatted_members
+        
+async def verify_user(user_id: int):
+    async with async_session_maker() as session:
+        user = await session.get(User, user_id)
+        if user:
+            user.isVerified = True
+            await session.commit()
+            return True
+        else:
+            return False
+        
+async def is_user_verified(user_id: int) -> bool:
+    async with async_session_maker() as session:
+        user = await session.get(User, user_id)
+        if user:
+            return user.isVerified
+        else:
+            return False
+        
+async def add_magic_link(token: str):
+    async with async_session_maker() as session:
+        current_time = datetime.utcnow()
+        new_token = MagicLink(token=token, created_at=current_time)
+        session.add(new_token)
+        await session.commit()
+        await session.refresh(new_token)
+        if new_token:
+            return True
+        else:
+            return False
+        
+async def find_token_by_value(token_value: str) -> MagicLink:
+    async with async_session_maker() as session:
+        query = select(MagicLink).filter(MagicLink.token == token_value)
+        result = await session.execute(query)
+        token = result.scalars().first()
+        return token
