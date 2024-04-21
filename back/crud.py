@@ -2,6 +2,7 @@ from sqlalchemy import insert, select
 from back.database import async_session_maker
 from datetime import datetime
 import passlib.hash
+from pytz import timezone
 
 from back.SystemReview.models import SystemReview
 from back.SystemReview.schemas import SSystemReview, SSystemReviewBase, SSystemReviewCreate
@@ -112,12 +113,13 @@ async def create_event(event: SEventCreate, file_name: str):
     async with async_session_maker() as session:
         db_event = Event(event_name = event.event_name,
                          event_description = event.event_description,
-                         starting_time = event.starting_time,
-                         ending_time = event.ending_time,
+                         starting_time = event.starting_time.replace(tzinfo=None),
+                         ending_time = event.ending_time.replace(tzinfo=None),
                          location = event.location,
                          participants_count = event.participants_count,
                          admin_comment = event.admin_comment,
-                         image_file_name = file_name)
+                         image_file_name = file_name,
+                         isModerated = event.isModerated)
         session.add(db_event)
         await session.commit()
         await session.refresh(db_event)

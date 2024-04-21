@@ -13,7 +13,6 @@ import { useForm, FormProvider } from 'react-hook-form';
 import * as z from "zod"
 import { FormSuccess } from './form-success';
 import { Textarea } from './ui/textarea';
-import { headers } from 'next/headers';
 
 const NewActivityForm = () => {
     const [file, setFile] = useState<File>();
@@ -53,7 +52,7 @@ const NewActivityForm = () => {
             +start_year,
             +start_month - 1,
             +start_day,
-            +start_hours,
+            +start_hours + 5,
             +start_minutes
         )
 
@@ -64,7 +63,7 @@ const NewActivityForm = () => {
             +end_year,
             +end_month - 1,
             +end_day,
-            +end_hours,
+            +end_hours + 5,
             +end_minutes
         )
 
@@ -92,8 +91,7 @@ const NewActivityForm = () => {
                 'Content-Type': 'multipart/form-data'
             },
         })
-        .then((resp) => { console.log(resp) })
-        .catch((e) => { console.log(e) } )
+        .catch((e) => { console.log(e) })
 
         setSuccess("Мероприятие отправлено на рассмотрение!");
     }
@@ -229,7 +227,7 @@ const NewActivityForm = () => {
                         name="avatar"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Аватар (опционально)</FormLabel>
+                                <FormLabel>Аватар</FormLabel>
                                 <FormControl>
                                     <Input
                                         id='event_avatar_input'

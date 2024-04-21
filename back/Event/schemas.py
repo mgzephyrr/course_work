@@ -14,6 +14,7 @@ class SEventBase(BaseModel):
 
 class SEventCreate(SEventBase):
     admin_comment: str | None = None
+    isModerated: bool = False
     pass
 
 class SEvent(SEventBase):
