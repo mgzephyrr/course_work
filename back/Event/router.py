@@ -83,9 +83,9 @@ async def get_event_info(event_id: int) -> SEvent:
 async def get_event_participants(event_id: int) -> List[SUser]:
     return await crud.get_event_participants_by_event_id(event_id = event_id)
 
-@router.post("/{event_id}/{user_id}")
-async def create_event_participant(event_id: int, user_id: int, event_participant: SEventParticipantCreate) -> SEventParticipant:
-    return await crud.create_event_participant(event_id = event_id, user_id = user_id, event_participant = event_participant)
+@router.post("/{event_id}/sign")
+async def create_event_participant(event_id: int, event_participant: SEventParticipantCreate, user: User = Depends(get_current_user)) -> SEventParticipant:
+    return await crud.create_event_participant(event_id = event_id, user_id = user.id, event_participant = event_participant)
 
 # @router.post("/{event_id}/organizer")
 # async def create_event_organizer(event_id:int, user: SUser = Depends(get_current_user)) -> SEventOrganizer:
