@@ -14,11 +14,11 @@ const Home = () => {
   const now = new Date()
   const [activity, setActivity] = useState<z.infer<typeof EventSchema>>();
 
-  const getBg = (image_filename: string | undefined) => {
+  const getBg = (image_filename: string) => {
     if (image_filename){
-      return `bg-[url('/images/${image_filename}')]`
+      return `url(/images/${image_filename})`
     }
-    return "bg-hero"
+    return `url(/images/hero-background.jpg)`
   }
 
   useEffect(() => {
@@ -57,8 +57,9 @@ const Home = () => {
       {
         activity &&
         <Link href= {"../activity/" + activity.id}
-              className={`h-[300px] w-full rounded-[20px] ${getBg(activity?.image_file_name)}
-                       bg-cover bg-center bg-zinc-500 bg-blend-multiply text-white cursor-pointer`}>
+              className="h-[300px] w-full rounded-[20px]
+                       bg-cover bg-center bg-zinc-500 bg-blend-multiply text-white cursor-pointer"
+                       style={{backgroundImage: getBg(activity.image_file_name)}}>
           <div className='flex h-full flex-col justify-between max-md:px-5 max-md:py-8 p-6 lg:p-11 '>
             <h2 className='max-w-[600px] rounded py-2 font-normal'>{activity?.event_name}</h2>
 

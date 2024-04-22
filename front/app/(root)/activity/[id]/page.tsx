@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { API_URL } from '@/constants'
 import { UserSchema } from '@/schemas'
 import axios from 'axios'
-import { CalendarFoldIcon, InfoIcon, Rotate3D, UserIcon } from 'lucide-react'
+import { CalendarFoldIcon, InfoIcon, UserIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import * as z from "zod";
