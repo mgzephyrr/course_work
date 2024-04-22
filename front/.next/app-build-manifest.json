@@ -57,6 +57,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(root)/profile/page.js"
+    ],
+    "/(root)/(home)/feedback/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/(home)/feedback/page.js"
+    ],
+    "/(root)/new_activity/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(root)/new_activity/page.js"
     ]
   }
 }

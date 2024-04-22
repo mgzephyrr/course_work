@@ -102,5 +102,5 @@ export const CreateEventSchema = z.object({
     }),
     avatar: z.any(),
     isStudentOnly: z.boolean(),
-    organisation: z.number()
+    organisation_id: z.optional(z.number())
 })

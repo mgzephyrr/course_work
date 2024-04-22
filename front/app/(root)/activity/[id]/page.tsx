@@ -26,56 +26,69 @@ export type ActivityInfo = {
   //organizers: data.data['id']
 }
 
-export function onAcceptClick(activity_id: number) {
-  axios.put(API_URL + `/events/${activity_id}/moderate`, {
-    params:{
-      event_id: activity_id
-    }
-  })
-  .then(() => {
-    toast("Вы приняли мероприятие", {
-      description: "Спасибо за то что приняли участие в процессе модерации!"
-    })
-  })
-  .catch((e) => {
-    console.log(e.response)
-  })
-}
-
-export function onDeclineClick(activity_id: number){
-  axios.delete(API_URL + `/events/${activity_id}/moderate/delete`, {
-    params:{
-      event_id: activity_id
-    }
-  })
-  .catch((e) => {
-    console.log(e.response)
-  })
-}
-
-export const onParticipateClick = (activity_id: number) => {
-  axios.post(API_URL + `/events/${activity_id}/sign`, {
-    params:{
-      event_id: activity_id
-    }
-  })
-  .then(() => {
-    toast("Вы приняли участие на мероприятии", {
-      description: "Надеемся вам понравится!"
-    })
-  })
-  .catch((e) => {
-    console.log(e.response)
-  })
-}
-
 
 function Activity ({params}: { params: {id: number} }) {
+  type OrganizerInfo = {
+    name: string,
+    avatar: string
+  }
+
   const activity_id = params.id
   const router = useRouter()
   const [activity, setActivity] = useState<ActivityInfo | undefined>(undefined);
   const [participationList, setParticipationList] = useState<ActivityParticipanceRow[]>([]);
-  const [isAlreadySigned, setIsAlreadySigned] = useState<boolean>(true);
+  const [isAlreadySigned, setIsAlreadySigned] = useState<boolean | undefined>();
+  const [organizer, setOrganizer] = useState<OrganizerInfo | undefined>()
+  const [isActivityModerated, setIsActivityModerated] = useState<boolean | undefined>();
+
+  const onParticipateClick = (activity_id: number) => {
+    axios.post(API_URL + `/events/${activity_id}/sign`, {
+      params:{
+        event_id: activity_id
+      }
+    })
+    .then(() => {
+      setIsAlreadySigned(true)
+      toast("Вы приняли участие на мероприятии", {
+        description: "Надеемся вам понравится!"
+      })
+    })
+    .catch((e) => {
+      if (e.response.data.detail === "User is already registered for this event"){
+        toast("Вы уже зарегистрированы на это мероприятие!")
+        return;
+      }
+      toast("Произошла непредвиденная ошибка, повторите попытку позже.")
+    })
+  }
+
+  function onAcceptClick(activity_id: number) {
+    axios.put(API_URL + `/events/${activity_id}/moderate`, {
+      params:{
+        event_id: activity_id
+      }
+    })
+    .then(() => {
+      setIsActivityModerated(true)
+      toast("Вы приняли мероприятие", {
+        description: "Спасибо за то что приняли участие в процессе модерации!"
+      })
+    })
+    .catch((e) => {
+      console.log(e.response)
+    })
+  }
+
+  function onDeclineClick(activity_id: number){
+    axios.delete(API_URL + `/events/${activity_id}/moderate/delete`, {
+      params:{
+        event_id: activity_id
+      }
+    })
+    .catch((e) => {
+      console.log(e.response)
+    })
+  }
 
   useEffect(() => {
     axios.get(API_URL + `/events/${activity_id}`,{
@@ -94,8 +107,8 @@ function Activity ({params}: { params: {id: number} }) {
         participants_count: event_data.data['participants_count'],
         image_file_name: event_data.data['image_file_name'],
         isModerated: event_data.data['isModerated'],
-        //organizers: event_data.data['']
       } as ActivityInfo)
+      setIsActivityModerated(event_data.data['isModerated'])
     })
     .catch((e) => {
       console.log(e.response)
@@ -119,9 +132,32 @@ function Activity ({params}: { params: {id: number} }) {
       console.log(e)
       setParticipationList([])
     })
+
+    axios.get(API_URL + `/events/${activity_id}/is_sign`, {
+        params:{
+            event_id: activity_id
+        }
+    })
+    .then((data) => {
+      setIsAlreadySigned(data.data)
+    })
+    .catch((e) => console.log(e))
+
+    axios.get(API_URL + `/events/event_organizer/${activity_id}`, {
+        params:{
+            event_id: activity_id
+        }
+    })
+    .then((data) => {
+      setOrganizer({
+        name: data.data['name'],
+        avatar: data.data['avatar']
+      })
+    })
+    .catch((e) => console.log(e))
   }, [])
 
-  if (!activity){
+  if (!activity || !organizer){
     return;
   }
 
@@ -141,7 +177,8 @@ function Activity ({params}: { params: {id: number} }) {
                         -mt-[64px] ml-4 h-[128px] w-[128px] min-w-[128px]
                         max-sm:-mt-[32px] max-sm:h-[64px] max-sm:w-[64px] max-sm:min-w-[64px]'
 
-             style={{backgroundImage: `url(/images/cf1c54f9-b3c3-4caf-8a95-9d5fed624936.jpg)`}}
+             style={{backgroundImage:
+              organizer.avatar ? `url(/images/${organizer.avatar})` : `url(/images/default-avatar.png)`}}
         />
         <div className='flex w-full flex-row justify-between px-4 py-6 max-md:flex-col max-md:gap-y-6'>
             <div className='flex flex-col gap-y-6'>
@@ -159,13 +196,13 @@ function Activity ({params}: { params: {id: number} }) {
                                     h-5 w-5 min-w-5
                                     max-sm:h-4 max-sm:w-4 max-sm:min-w-4'/>
                 <h2 className='lg:text-lg font-semibold max-sm:text-xs text-md
-                              break-words text-black'>HSE URSUS</h2>
+                              break-words text-black'>{organizer?.name}</h2>
               </div>
             </div>
 
 
             {
-              !activity?.isModerated &&
+              isActivityModerated === false &&
               <div className='flex flex-col gap-y-4'>
                 <Button className='flex bg-redbutton-1 hover:bg-redbutton-2 justify-center items-center gap-x-4 rounded-[10px] p-2 max-lg:w-full w-[140px]'
                   onClick={() => {
@@ -180,10 +217,7 @@ function Activity ({params}: { params: {id: number} }) {
                 <Button className='flex bg-greenbutton-1 hover:bg-greenbutton-2 justify-center items-center gap-x-4 rounded-[10px] p-2 max-md:w-full w-[140px]'
                   onClick={() => {
                     onAcceptClick(activity_id)
-                    router.replace(`/activities/${activity_id}`)
-                    toast("Вы приняли мероприятие", {
-                      description: "Спасибо за то что приняли участие в процессе модерации!"
-                    })
+                    router.replace(`/activity/${activity_id}`)
                   }}>
                   Принять
                 </Button>
@@ -191,23 +225,24 @@ function Activity ({params}: { params: {id: number} }) {
             }
 
             {
-              activity?.isModerated && !isAlreadySigned &&
+              isActivityModerated === true && isAlreadySigned === true &&
+              <Button className='flex bg-gray-200 hover:bg-gray-300 justify-center items-center gap-x-4 rounded-[10px] p-2 text-muted-foreground'>
+                Вы записаны
+              </Button>
+            }
+
+            {
+              isActivityModerated === true && isAlreadySigned === false &&
 
               <Button className='flex bg-blue-2 hover:bg-blue-500 justify-center items-center gap-x-4 rounded-[10px] p-2'
                       onClick={() => {
                         onParticipateClick(activity_id)
-                        router.refresh()
+                        router.replace(`/activity/${activity_id}`)
                         }}>
                 Принять участие
               </Button>
             }
 
-            {
-              activity?.isModerated && isAlreadySigned &&
-              <Button className='flex bg-gray-200 hover:bg-gray-300 justify-center items-center gap-x-4 rounded-[10px] p-2 text-muted-foreground'>
-                Вы записаны
-              </Button>
-            }
         </div>
 
       </div>

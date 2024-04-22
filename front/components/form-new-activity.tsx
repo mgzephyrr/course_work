@@ -18,9 +18,9 @@ import { Checkbox } from './ui/checkbox';
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command"
 
 import {
@@ -38,34 +38,28 @@ const NewActivityForm = () => {
         value: number
     }
 
-    const [organisationVariants, setOrganisationVariants] = useState<OrganisationInfo[]>([{
-                    label: "От своего имени",
-                    value: 0
-                }] as OrganisationInfo[])
+    const [organisationVariants, setOrganisationVariants] = useState<OrganisationInfo[]>([])
 
     const [file, setFile] = useState<File>();
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
-
-    console.log(organisationVariants)
+    const [organisationId, setOrganisationId] = useState<number | undefined>()
 
     useEffect(() => {
         axios.get(API_URL + '/studorg/user_organizations')
         .then((data) => {
-            // const orgs = data.data.map((org: z.infer<typeof OrganisationSchema>) => {
-            //     return {
-            //         label: org.stud_org_name,
-            //         value: org.id
-            //     } as OrganisationInfo
-            // })
+            const orgs = data.data.map((org: z.infer<typeof OrganisationSchema>) => {
+                return {
+                    label: org.stud_org_name,
+                    value: org.id
+                } as OrganisationInfo
+            })
 
-            // const fullOrgs = [{
-            //         label: "От своего имени",
-            //         value: 0
-            //     },
-            //     ...organisationVariants]
-
-            // setOrganisationVariants(fullOrgs)
+            setOrganisationVariants([{
+                    label: "От своего имени",
+                    value: -1
+                },
+                ...orgs])
         })
         .catch((e) => { console.log(e) })
     }, [])
@@ -80,7 +74,9 @@ const NewActivityForm = () => {
             ending_date: "",
             ending_time: "",
             location: "",
-            avatar: undefined
+            avatar: undefined,
+            isStudentOnly: false,
+            organisation_id: undefined
         },
     })
 
@@ -95,6 +91,7 @@ const NewActivityForm = () => {
         const event_end_date = (document.getElementById("event_end_date_input") as HTMLInputElement).value;
         const event_end_time = (document.getElementById("event_end_time_input") as HTMLInputElement).value;
         const event_location = (document.getElementById("event_location_input") as HTMLInputElement).value;
+        const isStudentOnly = (document.getElementById("student_only_checkbox") as HTMLInputElement).value;
 
         const [start_day, start_month, start_year] = event_start_date.split('.')
         const [start_hours, start_minutes] = event_start_time.split(':')
@@ -138,7 +135,9 @@ const NewActivityForm = () => {
                 ending_time: end_datetime,
                 location: event_location,
                 participants_count: 0,
-                admin_comment: ''
+                admin_comment: '',
+                isOnlyStudent: isStudentOnly,
+                stud_org_id: organisationId === -1 ? undefined : organisationId
             },
             data:{
                 file: file
@@ -302,10 +301,10 @@ const NewActivityForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="organisation"
+                        name="organisation_id"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                            <FormLabel>От имени студ. организации</FormLabel>
+                            <FormLabel>Организатор</FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                 <FormControl>
@@ -321,36 +320,37 @@ const NewActivityForm = () => {
                                             ? organisationVariants.find(
                                                 (organisation) => organisation.value === field.value
                                             )?.label
-                                            : "Выберите организацию"}
+                                            : "Выберите организатора"}
                                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                     </Button>
                                 </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0">
+                                <PopoverContent className="w-full p-0">
                                 <Command>
-                                    <CommandInput placeholder="Найти организацию..." />
+                                    <CommandInput placeholder="Найти..." />
                                     <CommandEmpty>Нет совпадений.</CommandEmpty>
-                                    <CommandGroup>
-                                    {organisationVariants.map((organisation) => (
-                                        <CommandItem
-                                            value={organisation.label}
-                                            key={organisation.value}
-                                            onSelect={() => {
-                                                form.setValue("organisation", organisation.value)
-                                            }}
-                                        >
-                                        <Check
-                                            className={cn(
-                                            "mr-2 h-4 w-4",
-                                            organisation.value === field.value
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                            )}
-                                        />
-                                        {organisation.label}
-                                        </CommandItem>
-                                    ))}
-                                    </CommandGroup>
+                                    <CommandList>
+                                        {organisationVariants.map((organisation) => (
+                                            <CommandItem
+                                                value={organisation.label}
+                                                key={organisation.value}
+                                                onSelect={() => {
+                                                    form.setValue("organisation_id", organisation.value)
+                                                    setOrganisationId(organisation.value)
+                                                }}
+                                            >
+                                            <Check
+                                                className={cn(
+                                                "mr-2 h-4 w-4",
+                                                organisation.value === field.value
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                )}
+                                            />
+                                            {organisation.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandList>
                                 </Command>
                                 </PopoverContent>
                             </Popover>
